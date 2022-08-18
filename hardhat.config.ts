@@ -1,5 +1,9 @@
-require("@nomicfoundation/hardhat-toolbox");
+import "@nomiclabs/hardhat-ethers";
 
+require("@nomicfoundation/hardhat-toolbox");
+require("@nomicfoundation/hardhat-chai-matchers");
+
+ 
 // The next line is part of the sample project, you don't need it in your
 // project. It imports a Hardhat task definition, that can be used for
 // testing the frontend.

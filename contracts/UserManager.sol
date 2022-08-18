@@ -1,4 +1,4 @@
-pragma solidity ^0.8.0;
+pragma solidity >=0.4.22 <0.9.0;
 
 //SPDX-License-Identifier: UNLICENSED
 
@@ -44,6 +44,7 @@ contract UserManager is RoleObserver, AccessControlEnumerable {
     function initialize() public onlyOnce {
         /* The roleManager is registered as an observer of RoleManager's state, effects are:
          *  - Observed state _ACCOUNTROLES get initialised at UserManager.
+         *  - UserManager becomes SYSTEM.
          */
         roleManager.registerAsRoleObserver(address(this));
 
@@ -51,12 +52,12 @@ contract UserManager is RoleObserver, AccessControlEnumerable {
 
         // Admin registration
         for (uint256 i = 0; i < admins.length; i++) {
-            registry[admins[i]].invitation = address(0);
             registry[admins[i]].roles.push("ADMIN");
             registry[admins[i]].activityStatus = "ACTIVE";
             roleManager.grantRole(ACTIVE, admins[i]);
         }
 
+        //deployer set to address zero to trigger the onlyOnce modifier
         deployer = address(0);
     }
 
@@ -82,6 +83,44 @@ contract UserManager is RoleObserver, AccessControlEnumerable {
                 keccak256("")),
             "UserManager: User already registered"
         );
+
+        //a user cannot be simultaneously CONSUMER and ADMIN
+        for (uint256 i = 0; i < roleNames.length; i++) {
+            for (uint256 j = 0; j < roleNames.length; j++) {
+                require(
+                    !((keccak256(abi.encodePacked(roleNames[i])) ==
+                        keccak256(abi.encodePacked("CONSUMER"))) &&
+                        (
+                            (keccak256(abi.encodePacked(roleNames[j])) ==
+                                (keccak256(abi.encodePacked("ADMIN"))))
+                        )),
+                    "UserManager: A user cannot be simultaneously CONSUMER and ADMIN"
+                );
+            }
+        }
+
+        //a user cannot be simultaneously ARTIST and ADMIN
+        for (uint256 i = 0; i < roleNames.length; i++) {
+            for (uint256 j = 0; j < roleNames.length; j++) {
+                require(
+                    !((keccak256(abi.encodePacked(roleNames[i])) ==
+                        keccak256(abi.encodePacked("ARTIST"))) &&
+                        (keccak256(abi.encodePacked(roleNames[j])) ==
+                            keccak256(abi.encodePacked("ADMIN")))),
+                    "UserManager: A user cannot be simultaneously ARTIST and ADMIN"
+                );
+            }
+        }
+
+        //a user cannot be SYSTEM
+
+        for (uint256 i = 0; i < roleNames.length; i++) {
+            require(
+                !(keccak256(abi.encodePacked(roleNames[i])) ==
+                    keccak256(abi.encodePacked("SYSTEM"))),
+                "UserManager: A user cannot be SYSTEM"
+            );
+        }
 
         roleManager.grantRole(ACTIVE, newAddress);
 
@@ -112,6 +151,44 @@ contract UserManager is RoleObserver, AccessControlEnumerable {
                 keccak256("")),
             "UserManager: The user you are trying to update is not registered"
         );
+
+        //a user cannot be simultaneously CONSUMER and ADMIN
+        for (uint256 i = 0; i < newRoles.length; i++) {
+            for (uint256 j = 0; j < newRoles.length; j++) {
+                require(
+                    !((keccak256(abi.encodePacked(newRoles[i])) ==
+                        keccak256(abi.encodePacked("CONSUMER"))) &&
+                        (
+                            (keccak256(abi.encodePacked(newRoles[j])) ==
+                                (keccak256(abi.encodePacked("ADMIN"))))
+                        )),
+                    "UserManager: A user cannot be simultaneously CONSUMER and ADMIN"
+                );
+            }
+        }
+
+        //a user cannot be simultaneously ARTIST and ADMIN
+        for (uint256 i = 0; i < newRoles.length; i++) {
+            for (uint256 j = 0; j < newRoles.length; j++) {
+                require(
+                    !((keccak256(abi.encodePacked(newRoles[i])) ==
+                        keccak256(abi.encodePacked("ARTIST"))) &&
+                        (keccak256(abi.encodePacked(newRoles[j])) ==
+                            keccak256(abi.encodePacked("ADMIN")))),
+                    "UserManager: A user cannot be simultaneously ARTIST and ADMIN"
+                );
+            }
+        }
+
+        //a user cannot be SYSTEM
+
+        for (uint256 i = 0; i < newRoles.length; i++) {
+            require(
+                !(keccak256(abi.encodePacked(newRoles[i])) ==
+                    keccak256(abi.encodePacked("SYSTEM"))),
+                "UserManager: A user cannot be SYSTEM"
+            );
+        }
 
         delete toGrant;
         bool flag;
@@ -190,7 +267,7 @@ contract UserManager is RoleObserver, AccessControlEnumerable {
     }
 
     /*
-     *  @dev Override of RoleObserver's function that upon account role deletion (e.g. VIP_MERCHANT) also needs to
+     *  @dev Override of RoleObserver's function that upon account role deletion also needs to
      *  update the user registry.
      */
     function deleteRole(string calldata roleName) public virtual override {

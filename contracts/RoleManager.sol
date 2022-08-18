@@ -1,11 +1,13 @@
-pragma solidity ^0.8.0;
+pragma solidity >=0.4.22 <0.9.0;
 
 //SPDX-License-Identifier: UNLICENSED
 
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "./RoleObserver.sol";
+import "./UserManager.sol";
+import "pablock-smart-contracts/contracts/PablockMetaTxReceiver.sol";
 
-contract RoleManager is AccessControlEnumerable {
+contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
     // @dev Proposal: adding roles
     // Roles are referred to by their `bytes32` identifier. These should be exposed
     // in the external API and be unique. The best way to achieve this is by
@@ -16,28 +18,53 @@ contract RoleManager is AccessControlEnumerable {
     bytes32 public constant ADMIN = keccak256("ADMIN");
     bytes32 public constant ACTIVE = keccak256("ACTIVE");
     bytes32 public constant SUSPENDED = keccak256("SUSPENDED");
+    bytes32 public constant SYSTEM = keccak256("SYSTEM");
 
     address[] private _observers;
 
     event RoleIsCreated(string role);
     event RoleIsDeleted(string role);
 
-    constructor() {
+    constructor(address metaTxAddress)
+        PablockMetaTxReceiver("RoleManager", "0.0.1")
+    {
+        //lets the contract enable notarizzazione.cloud metatransactions
+        //setMetaTransaction(metaTxAddress); //rimettere quando funzioneranno i test su mumbai
+
         // Grant the contract deployer the default admin role: it will be able
         // to grant and revoke any roles.
         _ACCOUNTROLES.push(keccak256("CONSUMER"));
         _ACCOUNTROLES.push(keccak256("ARTIST"));
         _ACCOUNTROLES.push(keccak256("ADMIN"));
+        _ACCOUNTROLES.push(keccak256("SYSTEM"));
 
         _setupRole(ADMIN, msg.sender);
         grantRole(ACTIVE, msg.sender);
         _grantRole(ADMIN, msg.sender);
+
+        _grantRole(SYSTEM, address(this));
     }
 
     //@dev modifier to set restrictions to methods -> only the admin can execute them
 
     modifier onlyAdmin() {
-        require(hasRole(ADMIN, msg.sender), "Function is restricted to ADMIN.");
+        require(
+            hasRole(ADMIN, msg.sender),
+            "Role Manager: Function is restricted to ADMIN."
+        );
+        _;
+    }
+
+    /*
+    @dev modifier to set restrictions to methods -> only the admin and the allowed contracts
+    can execute them
+    */
+
+    modifier onlyAdminAndSystem() {
+        require(
+            hasRole(SYSTEM, msg.sender) || hasRole(ADMIN, tx.origin),
+            "RoleManager: Function is restricted to ADMIN and SYSTEM."
+        );
         _;
     }
 
@@ -45,7 +72,7 @@ contract RoleManager is AccessControlEnumerable {
     function getAccountsByRole(string memory role)
         public
         view
-        onlyAdmin
+        onlyAdminAndSystem
         returns (address[] memory addresses)
     {
         bytes32 targetRole = keccak256(bytes(role));
@@ -69,10 +96,15 @@ contract RoleManager is AccessControlEnumerable {
             hasRole(ADMIN, tx.origin),
             "RoleManager: Function is restricted to ADMIN."
         );
-        _grantRole(keccak256("SYSTEM"), contractAddress);
+
+        _grantRole(SYSTEM, contractAddress);
 
         _observers.push(contractAddress);
-        RoleObserver(contractAddress).setAccountRoles(_ACCOUNTROLES);
+        RoleObserver(contractAddress).setRoles(_ACCOUNTROLES);
+    }
+
+    function isSystem(address account) public view returns (bool) {
+        return hasRole(SYSTEM, account);
     }
 
     function isAdmin(address account) public view returns (bool) {
@@ -83,18 +115,28 @@ contract RoleManager is AccessControlEnumerable {
         return hasRole(ACTIVE, account);
     }
 
+    function isRole(string calldata role) public view returns (bool) {
+        for (uint256 i = 0; i < _ACCOUNTROLES.length; i++) {
+            if (_ACCOUNTROLES[i] == keccak256(abi.encodePacked(role))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     //@dev method useful in case the admin wants to add a new role
     function addRole(string calldata name) public onlyAdmin {
         for (uint256 i = 0; i < _ACCOUNTROLES.length; i++) {
             if (_ACCOUNTROLES[i] == keccak256(abi.encodePacked(name))) {
-                revert("RoleManager: Account role already existent.");
+                revert("RoleManager: Account role already exists");
             }
         }
         _ACCOUNTROLES.push(keccak256(abi.encodePacked(name)));
 
         // Triggering all RoleManager observers state update.
         for (uint256 i = 0; i < _observers.length; i++)
-            RoleObserver(_observers[i]).addAccountRole(name);
+            RoleObserver(_observers[i]).addRole(name);
 
         emit RoleIsCreated(name);
     }
@@ -113,7 +155,7 @@ contract RoleManager is AccessControlEnumerable {
 
                 // Triggering all RoleManager observers state update.
                 for (uint256 j = 0; j < _observers.length; j++)
-                    RoleObserver(_observers[j]).deleteAccountRole(name);
+                    UserManager(_observers[j]).deleteRole(name);
 
                 emit RoleIsDeleted(name);
                 return;
@@ -122,12 +164,22 @@ contract RoleManager is AccessControlEnumerable {
         revert("RoleManager: Account role hash was not found.");
     }
 
-    function grantRole(bytes32 role, address account)
-        public
-        virtual
-        override
-        onlyAdmin
-    {
+    function grantRole(bytes32 role, address account) public virtual override {
+        if (role == ADMIN) {
+            require(
+                hasRole(ADMIN, msg.sender),
+                "RoleManager: Function is restricted to Admins."
+            );
+        } else {
+            require(
+                hasRole(ADMIN, msg.sender) || hasRole(SYSTEM, msg.sender),
+                "RoleManager: Function is restricted to ADMIN or SYSTEM."
+            );
+            /*
+            UserManager calls registerAsRoleObserver that in turn calls grantRole,
+            this is why hasRole(SYSTEM) was added
+            */
+        }
         _grantRole(role, account);
     }
 
@@ -135,8 +187,16 @@ contract RoleManager is AccessControlEnumerable {
         public
         virtual
         override
-        onlyAdmin
+        onlyAdminAndSystem
     {
+        require(role != ADMIN, "RoleManager: you cannot revoke ADMIN role");
         _revokeRole(role, account);
     }
+
+    // method to reset metatransaction in case of changes in the contract
+    /*
+    function set_MetaTransaction(address metaTxAddress) public {
+        setMetaTransaction(metaTxAddress);
+    }
+    */
 }

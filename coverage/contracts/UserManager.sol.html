@@ -1,0 +1,974 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts\UserManager.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> UserManager.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>78/78</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>32/32</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>8/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>82/82</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">19×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">26×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">25×</span>
+<span class="cline-any cline-yes">34×</span>
+<span class="cline-any cline-yes">57×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">32×</span>
+<span class="cline-any cline-yes">53×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">23×</span>
+<span class="cline-any cline-yes">31×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">21×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">21×</span>
+<span class="cline-any cline-yes">26×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">26×</span>
+<span class="cline-any cline-yes">26×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">26×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">21×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">21×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">pragma solidity &gt;=0.4.22 &lt;0.9.0;
+&nbsp;
+//SPDX-License-Identifier: UNLICENSED
+&nbsp;
+import {RoleManager} from "./RoleManager.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
+import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
+import "./RoleObserver.sol";
+import "hardhat/console.sol";
+&nbsp;
+contract UserManager is RoleObserver, AccessControlEnumerable {
+    struct UserData {
+        // Updated array of strings for roles of a user e.g. ["CONSUMER", "ARTIST"].
+        string[] roles;
+        // Either "ACTIVE" or "SUSPENDED".
+        string activityStatus;
+    }
+&nbsp;
+    // Public access to registry is only via getters automatically generated by the compiler.
+    mapping(address =&gt; UserData) public registry;
+&nbsp;
+    /*
+     *  Attributes that serve as dynamic array variables within addUser(); they need to be kept in the storage.
+     */
+    string[] toGrant;
+    string[] toRevoke;
+    string[] finalRoles;
+&nbsp;
+    event UserIsRegistered(address indexed newUser, string[] userRole);
+    event UserIsActivated(address indexed user);
+    event UserIsBanned(address indexed user);
+    event UserIsUnbanned(address indexed user);
+&nbsp;
+    constructor(address initialRoleManagerAddress) {
+        require(
+            initialRoleManagerAddress != address(0),
+            "UserManager: RoleManager address must not be zero."
+        );
+        roleManagerAddress = initialRoleManagerAddress;
+        roleManager = RoleManager(initialRoleManagerAddress);
+        deployer = msg.sender;
+    }
+&nbsp;
+    function initialize() public onlyOnce {
+        /* The roleManager is registered as an observer of RoleManager's state, effects are:
+         *  - Observed state _ACCOUNTROLES get initialised at UserManager.
+         *  - UserManager becomes SYSTEM.
+         */
+        roleManager.registerAsRoleObserver(address(this));
+&nbsp;
+        address[] memory admins = roleManager.getAccountsByRole("ADMIN");
+&nbsp;
+        // Admin registration
+        for (uint256 i = 0; i &lt; admins.length; i++) {
+            registry[admins[i]].roles.push("ADMIN");
+            registry[admins[i]].activityStatus = "ACTIVE";
+            roleManager.grantRole(ACTIVE, admins[i]);
+        }
+&nbsp;
+        //deployer set to address zero to trigger the onlyOnce modifier
+        deployer = address(0);
+    }
+&nbsp;
+    /*
+     *  @dev This getter is necessary because the Solidity-generated getter of mapping 'registry'
+     *  will ignore the mappings or arrays used inside the struct, i.e. it doesn't return its array 'roles'.
+     */
+    function getRoles(address account) external view returns (string[] memory) {
+        return registry[account].roles;
+    }
+&nbsp;
+    /*
+     *  @dev Function that performs the registration of a certain account.
+     */
+    function addUser(address newAddress, string[] memory roleNames)
+        external
+        whenNotPaused
+        onlyAdmin
+    {
+        require(
+            (registry[newAddress].roles.length == 0 &amp;&amp;
+                keccak256(bytes(registry[newAddress].activityStatus)) ==
+                keccak256("")),
+            "UserManager: User already registered"
+        );
+&nbsp;
+        //a user cannot be simultaneously CONSUMER and ADMIN
+        for (uint256 i = 0; i &lt; roleNames.length; i++) {
+            for (uint256 j = 0; j &lt; roleNames.length; j++) {
+                require(
+                    !((keccak256(abi.encodePacked(roleNames[i])) ==
+                        keccak256(abi.encodePacked("CONSUMER"))) &amp;&amp;
+                        (
+                            (keccak256(abi.encodePacked(roleNames[j])) ==
+                                (keccak256(abi.encodePacked("ADMIN"))))
+                        )),
+                    "UserManager: A user cannot be simultaneously CONSUMER and ADMIN"
+                );
+            }
+        }
+&nbsp;
+        //a user cannot be simultaneously ARTIST and ADMIN
+        for (uint256 i = 0; i &lt; roleNames.length; i++) {
+            for (uint256 j = 0; j &lt; roleNames.length; j++) {
+                require(
+                    !((keccak256(abi.encodePacked(roleNames[i])) ==
+                        keccak256(abi.encodePacked("ARTIST"))) &amp;&amp;
+                        (keccak256(abi.encodePacked(roleNames[j])) ==
+                            keccak256(abi.encodePacked("ADMIN")))),
+                    "UserManager: A user cannot be simultaneously ARTIST and ADMIN"
+                );
+            }
+        }
+&nbsp;
+        //a user cannot be SYSTEM
+&nbsp;
+        for (uint256 i = 0; i &lt; roleNames.length; i++) {
+            require(
+                !(keccak256(abi.encodePacked(roleNames[i])) ==
+                    keccak256(abi.encodePacked("SYSTEM"))),
+                "UserManager: A user cannot be SYSTEM"
+            );
+        }
+&nbsp;
+        roleManager.grantRole(ACTIVE, newAddress);
+&nbsp;
+        for (uint256 i = 0; i &lt; roleNames.length; i++) {
+            roleManager.grantRole(keccak256(bytes(roleNames[i])), newAddress);
+&nbsp;
+            registry[newAddress].roles.push(roleNames[i]);
+            registry[newAddress].activityStatus = "ACTIVE";
+&nbsp;
+            emit UserIsRegistered(newAddress, roleNames);
+        }
+&nbsp;
+        emit UserIsActivated(newAddress);
+&nbsp;
+        return;
+    }
+&nbsp;
+    /*
+     *  @dev Function that performs the update of a certain account roles.
+     */
+    function updateUser(address user, string[] memory newRoles)
+        external
+        onlyAdmin
+    {
+        require(
+            (registry[user].roles.length != 0 &amp;&amp;
+                keccak256(bytes(registry[user].activityStatus)) !=
+                keccak256("")),
+            "UserManager: The user you are trying to update is not registered"
+        );
+&nbsp;
+        //a user cannot be simultaneously CONSUMER and ADMIN
+        for (uint256 i = 0; i &lt; newRoles.length; i++) {
+            for (uint256 j = 0; j &lt; newRoles.length; j++) {
+                require(
+                    !((keccak256(abi.encodePacked(newRoles[i])) ==
+                        keccak256(abi.encodePacked("CONSUMER"))) &amp;&amp;
+                        (
+                            (keccak256(abi.encodePacked(newRoles[j])) ==
+                                (keccak256(abi.encodePacked("ADMIN"))))
+                        )),
+                    "UserManager: A user cannot be simultaneously CONSUMER and ADMIN"
+                );
+            }
+        }
+&nbsp;
+        //a user cannot be simultaneously ARTIST and ADMIN
+        for (uint256 i = 0; i &lt; newRoles.length; i++) {
+            for (uint256 j = 0; j &lt; newRoles.length; j++) {
+                require(
+                    !((keccak256(abi.encodePacked(newRoles[i])) ==
+                        keccak256(abi.encodePacked("ARTIST"))) &amp;&amp;
+                        (keccak256(abi.encodePacked(newRoles[j])) ==
+                            keccak256(abi.encodePacked("ADMIN")))),
+                    "UserManager: A user cannot be simultaneously ARTIST and ADMIN"
+                );
+            }
+        }
+&nbsp;
+        //a user cannot be SYSTEM
+&nbsp;
+        for (uint256 i = 0; i &lt; newRoles.length; i++) {
+            require(
+                !(keccak256(abi.encodePacked(newRoles[i])) ==
+                    keccak256(abi.encodePacked("SYSTEM"))),
+                "UserManager: A user cannot be SYSTEM"
+            );
+        }
+&nbsp;
+        delete toGrant;
+        bool flag;
+        // Iterate through newRoles to find what roles are not in registry[user].roles
+        for (uint256 j = 0; j &lt; newRoles.length; j++) {
+            for (uint256 k = 0; k &lt; registry[user].roles.length; k++) {
+                if (
+                    keccak256(bytes(newRoles[j])) ==
+                    keccak256(bytes(registry[user].roles[k]))
+                ) {
+                    flag = true;
+                }
+            }
+            // If the flag is true, it means that role newRoles[j] was found in the old ones, so no need to grant it again
+            if (flag == false) {
+                toGrant.push(newRoles[j]);
+            }
+            flag = false;
+        }
+&nbsp;
+        // Iterate through newRoles to find what roles are in registry[user].roles while not in new Roles
+        delete toRevoke;
+        flag = false;
+        for (uint256 j = 0; j &lt; registry[user].roles.length; j++) {
+            for (uint256 k = 0; k &lt; newRoles.length; k++) {
+                if (
+                    keccak256(bytes(newRoles[k])) ==
+                    keccak256(bytes(registry[user].roles[j]))
+                ) {
+                    flag = true;
+                }
+            }
+            if (flag == false) {
+                toRevoke.push(registry[user].roles[j]);
+            }
+            flag = false;
+        }
+&nbsp;
+        for (uint256 i = 0; i &lt; toRevoke.length; i++) {
+            roleManager.revokeRole(keccak256(bytes(toRevoke[i])), user);
+        }
+&nbsp;
+        for (uint256 l = 0; l &lt; toGrant.length; l++) {
+            roleManager.grantRole(keccak256(bytes(toGrant[l])), user);
+        }
+&nbsp;
+        //if the above for doesn't revert i can do this
+        delete registry[user].roles;
+        for (uint256 i = 0; i &lt; newRoles.length; i++) {
+            registry[user].roles.push(newRoles[i]);
+        }
+    }
+&nbsp;
+    function banUser(address userAddress) external whenNotPaused onlyAdmin {
+        require(
+            roleManager.hasRole(ACTIVE, userAddress),
+            "UserManager: User must be an active one."
+        );
+        roleManager.revokeRole(ACTIVE, userAddress);
+        roleManager.grantRole(SUSPENDED, userAddress);
+        registry[userAddress].activityStatus = "SUSPENDED";
+&nbsp;
+        emit UserIsBanned(userAddress);
+    }
+&nbsp;
+    function unbanUser(address userAddress) external whenNotPaused onlyAdmin {
+        require(
+            roleManager.hasRole(SUSPENDED, userAddress),
+            "UserManager: User is not banned."
+        );
+        roleManager.revokeRole(SUSPENDED, userAddress);
+        roleManager.grantRole(ACTIVE, userAddress);
+        registry[userAddress].activityStatus = "ACTIVE";
+&nbsp;
+        emit UserIsUnbanned(userAddress);
+    }
+&nbsp;
+    /*
+     *  @dev Override of RoleObserver's function that upon account role deletion also needs to
+     *  update the user registry.
+     */
+    function deleteRole(string calldata roleName) public virtual override {
+        super.deleteRole(roleName);
+&nbsp;
+        /*
+         *  @dev To purge the role across all the registry, we fetch the users having the target role (to be deleted)
+         *  and for each of them: 1) push into a dynamic array all remaining role strings; 2) revoke the target role;
+         *  3) update the registry entry of the user with the dynamic array.
+         *
+         *  Solidity stores dynamic arrays i.e. those that do not have a finite size at declaration (in this case
+         *  finalRoles) in storage i.e. there should be a contract state variable for it, hence we should account for its
+         *  persistence when we use it: we should clean it at each function run at the beginning or at the end.
+         */
+        address[] memory users = roleManager.getAccountsByRole(roleName);
+&nbsp;
+        for (uint256 i = 0; i &lt; users.length; i++) {
+            // @dev Clean it before filling it (equivalent: after usage) as it's in storage.
+            delete finalRoles;
+&nbsp;
+            for (uint256 j = 0; j &lt; registry[users[i]].roles.length; j++) {
+                if (
+                    keccak256(bytes(registry[users[i]].roles[j])) !=
+                    keccak256(bytes(roleName))
+                ) {
+                    finalRoles.push(registry[users[i]].roles[j]);
+                }
+            }
+            roleManager.revokeRole(keccak256(bytes(roleName)), users[i]);
+            registry[users[i]].roles = finalRoles;
+        }
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Aug 18 2022 09:24:30 GMT+0200 (Ora legale dell’Europa centrale)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
