@@ -1,15 +1,15 @@
 import { expect } from "chai";
-import hre from "hardhat";
 import { ethers } from "hardhat";
-import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import revertedWith from "@nomicfoundation/hardhat-chai-matchers";
-import { keccak256 } from "ethers/lib/utils";
 
 
 describe("RoleManager", function(){
+    
+    let deployer, consumer, artist, system;
+    let roleManager;
 
-    async function roleManagerDeployment() {
-        const [deployer, consumer, artist, system, active] = await ethers.getSigners();
+    beforeEach(async () => {
+        
+        ([deployer, consumer, artist, system] = await ethers.getSigners());
         console.log(
             "Deploying the contract with the account:",
             await deployer.getAddress()
@@ -20,21 +20,17 @@ describe("RoleManager", function(){
         const RoleManager = await ethers.getContractFactory("RoleManager");
 
         //deploy with pablock address for mumbai network
-        const roleManager = await RoleManager.deploy("0x4419AF074BC3a6C7D90f242dfdC1a163Bc710091"); 
+        roleManager = await RoleManager.deploy("0x4419AF074BC3a6C7D90f242dfdC1a163Bc710091"); 
 
         await roleManager.deployed();
 
         console.log("RoleManager deployed at:", roleManager.address);
-
-        return { roleManager, deployer, consumer, artist, system, active}
-    }
+    });
 
     
 
     it("only an admin or the system can view the array of addresses for each role", async function () {
         
-        
-        const {roleManager, consumer, artist, system} = await loadFixture(roleManagerDeployment);
         
         await roleManager.grantRole(ethers.utils.solidityKeccak256(["string"], ["CONSUMER"]), consumer.address);
         await roleManager.grantRole(ethers.utils.solidityKeccak256(["string"], ["CONSUMER"]), artist.address);
@@ -62,11 +58,9 @@ describe("RoleManager", function(){
         await expect(roleManager.connect(consumer).getAccountsByRole("CONSUMER")).to.be.revertedWith("RoleManager: Function is restricted to ADMIN and SYSTEM.");
 
     });
-
+    
     it("an admin can add and remove a role", async function () {
         
-        
-        const {roleManager, consumer, artist} = await loadFixture(roleManagerDeployment);
         
         //add role test
         await roleManager.addRole("TEST");
@@ -107,7 +101,6 @@ describe("RoleManager", function(){
     it("only an admin can add or delete a role", async function () {
         
         
-        const {roleManager, consumer} = await loadFixture(roleManagerDeployment);
 
 
 
@@ -129,8 +122,6 @@ describe("RoleManager", function(){
 
     it("no one, not even an admin, can delete the admin role", async function () {
         
-        
-        const {roleManager, consumer} = await loadFixture(roleManagerDeployment);
 
         await roleManager.grantRole(ethers.utils.solidityKeccak256(["string"], ["CONSUMER"]), consumer.address);
 
@@ -148,8 +139,6 @@ describe("RoleManager", function(){
     it("the admin cannot add an already existing role", async function () {
         
         
-        const {roleManager} = await loadFixture(roleManagerDeployment);
-
 
         //admin tries to add ADMIN role
         await expect(roleManager.addRole("ADMIN")).to.be.revertedWith("RoleManager: Account role already exists");
@@ -158,8 +147,6 @@ describe("RoleManager", function(){
 
     it("the admin cannot delete a non-existing role", async function () {
         
-        
-        const {roleManager} = await loadFixture(roleManagerDeployment);
 
 
         //admin tries to add ADMIN role
@@ -171,7 +158,6 @@ describe("RoleManager", function(){
     it("checks for boolean view functions", async function () {
         
         
-        const {roleManager, system, consumer, deployer} = await loadFixture(roleManagerDeployment);
 
         await roleManager.grantRole(ethers.utils.solidityKeccak256(["string"], ["CONSUMER"]), consumer.address);
         await roleManager.grantRole(ethers.utils.solidityKeccak256(["string"], ["SYSTEM"]), system.address);
@@ -200,7 +186,6 @@ describe("RoleManager", function(){
 
     it("only system or admin can grant a role", async function () {
 
-        const {roleManager, system, consumer} = await loadFixture(roleManagerDeployment);
 
         //reverts if consumer tries to grant a role
         await expect(roleManager.connect(consumer).grantRole(ethers.utils.solidityKeccak256(["string"], ["SYSTEM"]), system.address)).to.be.revertedWith("RoleManager: Function is restricted to ADMIN or SYSTEM.");
@@ -218,7 +203,6 @@ describe("RoleManager", function(){
 
     it("only admin can grant ADMIN role", async function () {
 
-        const {roleManager, system, consumer, artist} = await loadFixture(roleManagerDeployment);
 
         //reverts if consumer tries to grant ADMIN role
         await expect(roleManager.connect(consumer).grantRole(ethers.utils.solidityKeccak256(["string"], ["ADMIN"]), artist.address)).to.be.revertedWith("RoleManager: Function is restricted to Admins.");
@@ -235,7 +219,6 @@ describe("RoleManager", function(){
 
     it("only system or admin can revoke a role", async function () {
 
-        const {roleManager, system, consumer} = await loadFixture(roleManagerDeployment);
         //the admin grants the roles that we'll try to revoke
         await roleManager.grantRole(ethers.utils.solidityKeccak256(["string"], ["SYSTEM"]), system.address);
         await roleManager.grantRole(ethers.utils.solidityKeccak256(["string"], ["ACTIVE"]), consumer.address);
@@ -258,7 +241,6 @@ describe("RoleManager", function(){
 
     it("no one, not even an admin, can revoke ADMIN role", async function () {
 
-        const {roleManager, system, consumer, deployer} = await loadFixture(roleManagerDeployment);
 
 
         //reverts if consumer tries to revoke ADMIN role
@@ -275,8 +257,6 @@ describe("RoleManager", function(){
     
 
     it("a contract registers as RoleObserver of RoleManager's state (tx.origin = Admin)", async function () {
-
-        const {roleManager} = await loadFixture(roleManagerDeployment);
 
         //deployment of userManager (potential observer)
 
@@ -298,7 +278,6 @@ describe("RoleManager", function(){
     
     it("a contract can't register as RoleObserver of RoleManager's state if tx.origin != Admin", async function () {
 
-        const {roleManager, consumer} = await loadFixture(roleManagerDeployment);
 
         //deployment of userManager (potential observer)
         
@@ -317,7 +296,6 @@ describe("RoleManager", function(){
 
     it("a contract registers as RoleObserver and is updated in addRole and deleteRole", async function () {
 
-        const {roleManager} = await loadFixture(roleManagerDeployment);
 
         //deployment of userManager (concrete observer)
 
@@ -344,11 +322,7 @@ describe("RoleManager", function(){
 
 
     });
-    /* TODO quando funziona mumbai
-    it("Test notarizzazione.cloud", async function () {
-        
-    });
-    */
+    
     
 });
 

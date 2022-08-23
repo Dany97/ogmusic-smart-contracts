@@ -29,7 +29,7 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
         PablockMetaTxReceiver("RoleManager", "0.0.1")
     {
         //lets the contract enable notarizzazione.cloud metatransactions
-        //setMetaTransaction(metaTxAddress); //rimettere quando funzioneranno i test su mumbai
+        //setMetaTransaction(metaTxAddress);
 
         // Grant the contract deployer the default admin role: it will be able
         // to grant and revoke any roles.

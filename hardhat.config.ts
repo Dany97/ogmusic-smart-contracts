@@ -1,7 +1,10 @@
 import "@nomiclabs/hardhat-ethers";
 
 require("@nomicfoundation/hardhat-toolbox");
-require("@nomicfoundation/hardhat-chai-matchers");
+import "@nomicfoundation/hardhat-chai-matchers";
+
+
+
 
  
 // The next line is part of the sample project, you don't need it in your
@@ -18,8 +21,21 @@ module.exports = {
     },
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com",
+      chainId: 13881,
       accounts: [process.env.PRIVATE_KEY],
+      timeout: 60000,
+      gas: 2100000,
+      gasPrice: 8000000000
     },
+
+    rinkeby: {
+      url: "https://rinkeby.infura.io/v3/387c4f9146f74886a4079f690fc13898",
+      chainId: 4,
+      accounts: [process.env.PRIVATE_KEY],
+      timeout: 60000,
+      gas: 2100000,
+      gasPrice: 8000000000
+    }
     
   }
 };

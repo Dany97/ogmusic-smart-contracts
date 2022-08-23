@@ -1,14 +1,13 @@
 import { expect, use } from "chai";
-import hre from "hardhat";
 import { ethers } from "hardhat";
-import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import revertedWith from "@nomicfoundation/hardhat-chai-matchers";
-import { keccak256 } from "ethers/lib/utils";
 
 describe("UserManager (contains RoleObserver tests)", function(){
+
+    let deployer, consumer, artist, system, active;
+    let roleManager, userManager;
     
-    async function userManagerDeployment() {
-        const [deployer, consumer, artist, system, active] = await ethers.getSigners();
+    beforeEach(async () => {
+        ([deployer, consumer, artist, system, active] = await ethers.getSigners());
         console.log(
             "Deploying the contract with the account:",
             await deployer.getAddress()
@@ -19,83 +18,27 @@ describe("UserManager (contains RoleObserver tests)", function(){
         const RoleManager = await ethers.getContractFactory("RoleManager");
 
         //deploy with pablock address for mumbai network
-        const roleManager = await RoleManager.deploy("0x4419AF074BC3a6C7D90f242dfdC1a163Bc710091"); 
+        roleManager = await RoleManager.deploy("0x4419AF074BC3a6C7D90f242dfdC1a163Bc710091"); 
 
         await roleManager.deployed();
 
         console.log("RoleManager deployed at:", roleManager.address);
 
+        
         const UserManager = await ethers.getContractFactory("UserManager");
 
-        const userManager = await UserManager.deploy(roleManager.address);
+        userManager = await UserManager.deploy(roleManager.address);
 
         console.log("UserManager deployed at:", userManager.address);
-
-
-        return { roleManager, userManager, deployer, consumer, artist, system, active}
-    }
-
-    async function userManagerDeploymentWithInitialization() {
-        const [deployer, consumer, artist, system, active] = await ethers.getSigners();
-        console.log(
-            "Deploying the contract with the account:",
-            await deployer.getAddress()
-        );
-
-        console.log("Account balance:", (await deployer.getBalance()).toString());
-
-        const RoleManager = await ethers.getContractFactory("RoleManager");
-
-        //deploy with pablock address for mumbai network
-        const roleManager = await RoleManager.deploy("0x4419AF074BC3a6C7D90f242dfdC1a163Bc710091"); 
-
-        await roleManager.deployed();
-
-        console.log("RoleManager deployed at:", roleManager.address);
-
-        const UserManager = await ethers.getContractFactory("UserManager");
-
-        const userManager = await UserManager.deploy(roleManager.address);
-
-        console.log("UserManager deployed at:", userManager.address);
-
         await userManager.initialize();
 
-
-        return { roleManager, userManager, deployer, consumer, artist, system, active}
-    }
+        });
 
 
-    it("UserManager initializes itself becoming a concrete observer of RoleManager's state", async function() {
-        
-        const {roleManager, userManager} = await loadFixture(userManagerDeployment);
-
-        await userManager.initialize();
-        expect (await roleManager.connect(userManager.address).isSystem(userManager.address)).to.equal(true);
-
-    })
-
-    it("UserManager cannot be deployer by address zero", async function() {
-        
-        const UserManager = await ethers.getContractFactory("UserManager");
-
-        await expect(UserManager.deploy("0x0000000000000000000000000000000000000000")).to.be.revertedWith("UserManager: RoleManager address must not be zero.");
-        
-    })
-
-    it("UserManager cannot initialize itself twice or initialize with a different deployer", async function() {
-        
-        const {userManager, consumer} = await loadFixture(userManagerDeployment);
-
-        await expect(userManager.connect(consumer).initialize()).to.be.revertedWith("RoleObserver: Function is restricted to contract's deployer.");
-        await userManager.initialize();
-        await expect(userManager.initialize()).to.be.revertedWith("RoleObserver: Function cannot be called more than once.");
-
-    })
+    
 
     it("the system adds an user and sees the roles of its account", async function (){
         
-        const {userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
 
 
         await userManager.addUser(consumer.address, ["CONSUMER"]);
@@ -110,7 +53,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("a consumer cannot add a new user", async function (){
         
-        const {userManager, consumer, artist} = await loadFixture(userManagerDeploymentWithInitialization);
 
         //add the user as consumer
         await userManager.addUser(consumer.address, ["CONSUMER"]);
@@ -125,8 +67,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
 
     it("the system cannot add an already existing user", async function (){
-        
-        const {userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
 
 
         await userManager.addUser(consumer.address, ["CONSUMER"]);
@@ -137,7 +77,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("a new user cannot have simultaneously CONSUMER and ADMIN roles", async function (){
         
-        const {userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
 
         await expect(userManager.addUser(consumer.address, ["CONSUMER", "ADMIN"])).to.be.revertedWith("UserManager: A user cannot be simultaneously CONSUMER and ADMIN");
 
@@ -145,7 +84,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("a new user cannot have simultaneously ARTIST and ADMIN roles", async function (){
         
-        const {userManager, artist} = await loadFixture(userManagerDeploymentWithInitialization);
 
         await expect(userManager.addUser(artist.address, ["ARTIST", "ADMIN"])).to.be.revertedWith("UserManager: A user cannot be simultaneously ARTIST and ADMIN");
 
@@ -154,7 +92,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("a user cannot be SYSTEM", async function (){
         
-        const {userManager, consumer, artist} = await loadFixture(userManagerDeploymentWithInitialization);
 
         await expect(userManager.addUser(consumer.address, ["CONSUMER", "SYSTEM"])).to.be.revertedWith("UserManager: A user cannot be SYSTEM");
         await expect(userManager.addUser(artist.address, ["CONSUMER", "ARTIST", "SYSTEM"])).to.be.revertedWith("UserManager: A user cannot be SYSTEM");
@@ -164,7 +101,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("the system updates an user and sees the roles of its account", async function (){
         
-        const {userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
 
         //user added previously
         await userManager.addUser(consumer.address, ["CONSUMER"]);
@@ -193,7 +129,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("a consumer cannot update user roles", async function (){
         
-        const {userManager, consumer, artist} = await loadFixture(userManagerDeploymentWithInitialization);
 
         //add the user as consumer
         await userManager.addUser(consumer.address, ["CONSUMER"]);
@@ -209,7 +144,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("the system cannot update a non-existing user", async function (){
         
-        const {userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
 
         await expect(userManager.updateUser(consumer.address, ["CONSUMER"])).to.be.revertedWith("UserManager: The user you are trying to update is not registered");
 
@@ -217,8 +151,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("a user cannot be updated simultaneously with CONSUMER and ADMIN roles", async function (){
         
-        const {userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
-
         //add the user as consumer
         await userManager.addUser(consumer.address, ["CONSUMER"]);
         
@@ -229,7 +161,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("a user cannot be updated simultaneously with ARTIST and ADMIN roles", async function (){
         
-        const {userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
         
         //add the user as consumer
         await userManager.addUser(consumer.address, ["CONSUMER"]);
@@ -242,7 +173,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("a user cannot be updated with SYSTEM", async function (){
         
-        const {userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
 
         //add the user as consumer
         await userManager.addUser(consumer.address, ["CONSUMER"]);
@@ -254,7 +184,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("a new user cannot be added if the system is paused", async function (){
         
-        const {userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
 
         //if paused, addUser doesn't have to work
         await userManager.pause();
@@ -275,7 +204,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("the system bans a user and sees the status of its account", async function (){
         
-        const {roleManager, userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
 
 
         await userManager.addUser(consumer.address, ["CONSUMER"]);
@@ -290,8 +218,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("the system cannot ban a user if it is paused", async function (){
         
-        const {roleManager, userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
-
 
         await userManager.addUser(consumer.address, ["CONSUMER"]);
 
@@ -312,7 +238,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("only the admin and the system can ban a user", async function (){
         
-        const {userManager, consumer, artist} = await loadFixture(userManagerDeploymentWithInitialization);
 
 
         await userManager.addUser(consumer.address, ["CONSUMER"]);
@@ -325,7 +250,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("the system cannot ban a user who is already suspended", async function (){
         
-        const {roleManager, userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
 
 
         await userManager.addUser(consumer.address, ["CONSUMER"]);
@@ -346,8 +270,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("the system unbans a user and sees the status of its account", async function (){
         
-        const {roleManager, userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
-
 
         await userManager.addUser(consumer.address, ["CONSUMER"]);
         await userManager.banUser(consumer.address);
@@ -360,8 +282,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("the system cannot unban a user if it is paused", async function (){
         
-        const {roleManager, userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
-
 
         await userManager.addUser(consumer.address, ["CONSUMER"]);
         await userManager.banUser(consumer.address);
@@ -383,7 +303,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("only the admin and the system can unban a user", async function (){
         
-        const {userManager, consumer, artist} = await loadFixture(userManagerDeploymentWithInitialization);
 
 
         await userManager.addUser(consumer.address, ["CONSUMER"]);
@@ -399,7 +318,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("the system cannot unban a user who is not suspended", async function (){
         
-        const {roleManager, userManager, consumer} = await loadFixture(userManagerDeploymentWithInitialization);
 
 
         await userManager.addUser(consumer.address, ["CONSUMER"]);
@@ -415,7 +333,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("RoleObserver: admin adds new roleManager", async function() {
         
-        const { userManager, deployer } = await loadFixture(userManagerDeploymentWithInitialization);
 
         console.log(
             "Deploying the contract with the account:",
@@ -442,7 +359,6 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("RoleObserver: admin cannot add address zero as new roleManager", async function() {
         
-        const { userManager} = await loadFixture(userManagerDeploymentWithInitialization);
 
         await expect(userManager.addNewRoleManager("0x0000000000000000000000000000000000000000")).to.be.revertedWith("RoleObserver: You are trying to set RoleManager to address(0).");
 
@@ -451,10 +367,11 @@ describe("UserManager (contains RoleObserver tests)", function(){
 
     it("RoleObserver: test modifier onlyRoleManager", async function() {
         
-        const { userManager } = await loadFixture(userManagerDeploymentWithInitialization);
 
         await expect(userManager.deleteRole("CONSUMER")).to.be.revertedWith("RoleObserver: Function is restricted to RoleManager.");
 
 
     });
+
+
 });
