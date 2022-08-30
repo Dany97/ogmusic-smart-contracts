@@ -85,6 +85,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.RoleObserver__factory>;
     getContractFactory(
+      name: "TokenFactory",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TokenFactory__factory>;
+    getContractFactory(
       name: "UserManager",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.UserManager__factory>;
@@ -96,10 +100,6 @@ declare module "hardhat/types/runtime" {
       name: "ERC721Generator",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC721Generator__factory>;
-    getContractFactory(
-      name: "TestNFT",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.TestNFT__factory>;
     getContractFactory(
       name: "IEIP712MetaTransaction",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -200,6 +200,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.RoleObserver>;
     getContractAt(
+      name: "TokenFactory",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TokenFactory>;
+    getContractAt(
       name: "UserManager",
       address: string,
       signer?: ethers.Signer
@@ -214,11 +219,6 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.ERC721Generator>;
-    getContractAt(
-      name: "TestNFT",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.TestNFT>;
     getContractAt(
       name: "IEIP712MetaTransaction",
       address: string,

@@ -29,228 +29,138 @@ import type {
 
 export interface TokenFactoryInterface extends utils.Interface {
   functions: {
-    "approve(address,uint256)": FunctionFragment;
-    "balanceOf(address)": FunctionFragment;
-    "createTokenShares(string,string,uint256,uint256)": FunctionFragment;
-    "getApproved(uint256)": FunctionFragment;
-    "getDescription()": FunctionFragment;
-    "getReceiver()": FunctionFragment;
-    "getReceiverAddress()": FunctionFragment;
-    "getURI()": FunctionFragment;
-    "isApprovedForAll(address,address)": FunctionFragment;
-    "name()": FunctionFragment;
-    "ownerOf(uint256)": FunctionFragment;
-    "safeTransferFrom(address,address,uint256)": FunctionFragment;
-    "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
-    "setApprovalForAll(address,bool)": FunctionFragment;
-    "supportsInterface(bytes4)": FunctionFragment;
-    "symbol()": FunctionFragment;
-    "tokenURI(uint256)": FunctionFragment;
-    "transferFrom(address,address,uint256)": FunctionFragment;
+    "ACTIVE()": FunctionFragment;
+    "ADMIN()": FunctionFragment;
+    "SUSPENDED()": FunctionFragment;
+    "addNewRoleManager(address)": FunctionFragment;
+    "addRole(string)": FunctionFragment;
+    "deleteRole(string)": FunctionFragment;
+    "initialize()": FunctionFragment;
+    "mintShares(string,string,string,string,string,string,uint256,uint256,uint256,address)": FunctionFragment;
+    "pause()": FunctionFragment;
+    "paused()": FunctionFragment;
+    "setRoles(bytes32[])": FunctionFragment;
+    "unpause()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "approve"
-      | "balanceOf"
-      | "createTokenShares"
-      | "getApproved"
-      | "getDescription"
-      | "getReceiver"
-      | "getReceiverAddress"
-      | "getURI"
-      | "isApprovedForAll"
-      | "name"
-      | "ownerOf"
-      | "safeTransferFrom(address,address,uint256)"
-      | "safeTransferFrom(address,address,uint256,bytes)"
-      | "setApprovalForAll"
-      | "supportsInterface"
-      | "symbol"
-      | "tokenURI"
-      | "transferFrom"
+      | "ACTIVE"
+      | "ADMIN"
+      | "SUSPENDED"
+      | "addNewRoleManager"
+      | "addRole"
+      | "deleteRole"
+      | "initialize"
+      | "mintShares"
+      | "pause"
+      | "paused"
+      | "setRoles"
+      | "unpause"
   ): FunctionFragment;
 
+  encodeFunctionData(functionFragment: "ACTIVE", values?: undefined): string;
+  encodeFunctionData(functionFragment: "ADMIN", values?: undefined): string;
+  encodeFunctionData(functionFragment: "SUSPENDED", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "approve",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "balanceOf",
+    functionFragment: "addNewRoleManager",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "createTokenShares",
+    functionFragment: "addRole",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "deleteRole",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mintShares",
     values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getApproved",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getDescription",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getReceiver",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getReceiverAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "getURI", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "isApprovedForAll",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "ownerOf",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "safeTransferFrom(address,address,uint256)",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "safeTransferFrom(address,address,uint256,bytes)",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>
     ]
   ): string;
+  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "setApprovalForAll",
-    values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
+    functionFragment: "setRoles",
+    values: [PromiseOrValue<BytesLike>[]]
   ): string;
-  encodeFunctionData(
-    functionFragment: "supportsInterface",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "tokenURI",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferFrom",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
+  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
 
-  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "ACTIVE", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "ADMIN", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "SUSPENDED", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "createTokenShares",
+    functionFragment: "addNewRoleManager",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "getApproved",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getDescription",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getReceiver",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getReceiverAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getURI", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "isApprovedForAll",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "safeTransferFrom(address,address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "safeTransferFrom(address,address,uint256,bytes)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setApprovalForAll",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "supportsInterface",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "transferFrom",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "addRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "deleteRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "mintShares", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setRoles", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
 
   events: {
-    "Approval(address,address,uint256)": EventFragment;
-    "ApprovalForAll(address,address,bool)": EventFragment;
-    "Transfer(address,address,uint256)": EventFragment;
+    "Paused(address)": EventFragment;
+    "Unpaused(address)": EventFragment;
+    "newRoleManagerSet(address)": EventFragment;
+    "sharesCreated(address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "newRoleManagerSet"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "sharesCreated"): EventFragment;
 }
 
-export interface ApprovalEventObject {
-  owner: string;
-  approved: string;
-  tokenId: BigNumber;
+export interface PausedEventObject {
+  account: string;
 }
-export type ApprovalEvent = TypedEvent<
-  [string, string, BigNumber],
-  ApprovalEventObject
+export type PausedEvent = TypedEvent<[string], PausedEventObject>;
+
+export type PausedEventFilter = TypedEventFilter<PausedEvent>;
+
+export interface UnpausedEventObject {
+  account: string;
+}
+export type UnpausedEvent = TypedEvent<[string], UnpausedEventObject>;
+
+export type UnpausedEventFilter = TypedEventFilter<UnpausedEvent>;
+
+export interface newRoleManagerSetEventObject {
+  newRoleManagerAddress: string;
+}
+export type newRoleManagerSetEvent = TypedEvent<
+  [string],
+  newRoleManagerSetEventObject
 >;
 
-export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>;
+export type newRoleManagerSetEventFilter =
+  TypedEventFilter<newRoleManagerSetEvent>;
 
-export interface ApprovalForAllEventObject {
-  owner: string;
-  operator: string;
-  approved: boolean;
+export interface sharesCreatedEventObject {
+  contractAddress: string;
 }
-export type ApprovalForAllEvent = TypedEvent<
-  [string, string, boolean],
-  ApprovalForAllEventObject
->;
+export type sharesCreatedEvent = TypedEvent<[string], sharesCreatedEventObject>;
 
-export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
-
-export interface TransferEventObject {
-  from: string;
-  to: string;
-  tokenId: BigNumber;
-}
-export type TransferEvent = TypedEvent<
-  [string, string, BigNumber],
-  TransferEventObject
->;
-
-export type TransferEventFilter = TypedEventFilter<TransferEvent>;
+export type sharesCreatedEventFilter = TypedEventFilter<sharesCreatedEvent>;
 
 export interface TokenFactory extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -279,471 +189,291 @@ export interface TokenFactory extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    approve(
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    ACTIVE(overrides?: CallOverrides): Promise<[string]>;
+
+    ADMIN(overrides?: CallOverrides): Promise<[string]>;
+
+    SUSPENDED(overrides?: CallOverrides): Promise<[string]>;
+
+    addNewRoleManager(
+      newRoleManagerAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    balanceOf(
-      owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    createTokenShares(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      shares: PromiseOrValue<BigNumberish>,
-      price: PromiseOrValue<BigNumberish>,
+    addRole(
+      roleName: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    getApproved(
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    getDescription(overrides?: CallOverrides): Promise<[string]>;
-
-    getReceiver(overrides?: CallOverrides): Promise<[string]>;
-
-    getReceiverAddress(overrides?: CallOverrides): Promise<[string]>;
-
-    getURI(overrides?: CallOverrides): Promise<[string]>;
-
-    isApprovedForAll(
-      owner: PromiseOrValue<string>,
-      operator: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    name(overrides?: CallOverrides): Promise<[string]>;
-
-    ownerOf(
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    "safeTransferFrom(address,address,uint256)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    deleteRole(
+      roleName: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "safeTransferFrom(address,address,uint256,bytes)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+    initialize(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    setApprovalForAll(
-      operator: PromiseOrValue<string>,
-      approved: PromiseOrValue<boolean>,
+    mintShares(
+      NFTName: PromiseOrValue<string>,
+      NFTSymbol: PromiseOrValue<string>,
+      NFTDescription: PromiseOrValue<string>,
+      NFTUri: PromiseOrValue<string>,
+      ERC20SharesName: PromiseOrValue<string>,
+      ERC20SharesSymbol: PromiseOrValue<string>,
+      sharesAmount: PromiseOrValue<BigNumberish>,
+      sharesPrice: PromiseOrValue<BigNumberish>,
+      rightsPercentage: PromiseOrValue<BigNumberish>,
+      artistAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    supportsInterface(
-      interfaceId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    pause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-    symbol(overrides?: CallOverrides): Promise<[string]>;
+    paused(overrides?: CallOverrides): Promise<[boolean]>;
 
-    tokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    setRoles(
+      allAccountRoles: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-    transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    unpause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
 
-  approve(
-    to: PromiseOrValue<string>,
-    tokenId: PromiseOrValue<BigNumberish>,
+  ACTIVE(overrides?: CallOverrides): Promise<string>;
+
+  ADMIN(overrides?: CallOverrides): Promise<string>;
+
+  SUSPENDED(overrides?: CallOverrides): Promise<string>;
+
+  addNewRoleManager(
+    newRoleManagerAddress: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  balanceOf(
-    owner: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  createTokenShares(
-    name: PromiseOrValue<string>,
-    symbol: PromiseOrValue<string>,
-    shares: PromiseOrValue<BigNumberish>,
-    price: PromiseOrValue<BigNumberish>,
+  addRole(
+    roleName: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  getApproved(
-    tokenId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  getDescription(overrides?: CallOverrides): Promise<string>;
-
-  getReceiver(overrides?: CallOverrides): Promise<string>;
-
-  getReceiverAddress(overrides?: CallOverrides): Promise<string>;
-
-  getURI(overrides?: CallOverrides): Promise<string>;
-
-  isApprovedForAll(
-    owner: PromiseOrValue<string>,
-    operator: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  name(overrides?: CallOverrides): Promise<string>;
-
-  ownerOf(
-    tokenId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  "safeTransferFrom(address,address,uint256)"(
-    from: PromiseOrValue<string>,
-    to: PromiseOrValue<string>,
-    tokenId: PromiseOrValue<BigNumberish>,
+  deleteRole(
+    roleName: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "safeTransferFrom(address,address,uint256,bytes)"(
-    from: PromiseOrValue<string>,
-    to: PromiseOrValue<string>,
-    tokenId: PromiseOrValue<BigNumberish>,
-    data: PromiseOrValue<BytesLike>,
+  initialize(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  setApprovalForAll(
-    operator: PromiseOrValue<string>,
-    approved: PromiseOrValue<boolean>,
+  mintShares(
+    NFTName: PromiseOrValue<string>,
+    NFTSymbol: PromiseOrValue<string>,
+    NFTDescription: PromiseOrValue<string>,
+    NFTUri: PromiseOrValue<string>,
+    ERC20SharesName: PromiseOrValue<string>,
+    ERC20SharesSymbol: PromiseOrValue<string>,
+    sharesAmount: PromiseOrValue<BigNumberish>,
+    sharesPrice: PromiseOrValue<BigNumberish>,
+    rightsPercentage: PromiseOrValue<BigNumberish>,
+    artistAddress: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  supportsInterface(
-    interfaceId: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  pause(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  symbol(overrides?: CallOverrides): Promise<string>;
+  paused(overrides?: CallOverrides): Promise<boolean>;
 
-  tokenURI(
-    tokenId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  setRoles(
+    allAccountRoles: PromiseOrValue<BytesLike>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  transferFrom(
-    from: PromiseOrValue<string>,
-    to: PromiseOrValue<string>,
-    tokenId: PromiseOrValue<BigNumberish>,
+  unpause(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    approve(
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    ACTIVE(overrides?: CallOverrides): Promise<string>;
+
+    ADMIN(overrides?: CallOverrides): Promise<string>;
+
+    SUSPENDED(overrides?: CallOverrides): Promise<string>;
+
+    addNewRoleManager(
+      newRoleManagerAddress: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    balanceOf(
-      owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    createTokenShares(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      shares: PromiseOrValue<BigNumberish>,
-      price: PromiseOrValue<BigNumberish>,
+    addRole(
+      roleName: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    getApproved(
-      tokenId: PromiseOrValue<BigNumberish>,
+    deleteRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    initialize(overrides?: CallOverrides): Promise<void>;
+
+    mintShares(
+      NFTName: PromiseOrValue<string>,
+      NFTSymbol: PromiseOrValue<string>,
+      NFTDescription: PromiseOrValue<string>,
+      NFTUri: PromiseOrValue<string>,
+      ERC20SharesName: PromiseOrValue<string>,
+      ERC20SharesSymbol: PromiseOrValue<string>,
+      sharesAmount: PromiseOrValue<BigNumberish>,
+      sharesPrice: PromiseOrValue<BigNumberish>,
+      rightsPercentage: PromiseOrValue<BigNumberish>,
+      artistAddress: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    getDescription(overrides?: CallOverrides): Promise<string>;
+    pause(overrides?: CallOverrides): Promise<void>;
 
-    getReceiver(overrides?: CallOverrides): Promise<string>;
+    paused(overrides?: CallOverrides): Promise<boolean>;
 
-    getReceiverAddress(overrides?: CallOverrides): Promise<string>;
-
-    getURI(overrides?: CallOverrides): Promise<string>;
-
-    isApprovedForAll(
-      owner: PromiseOrValue<string>,
-      operator: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    name(overrides?: CallOverrides): Promise<string>;
-
-    ownerOf(
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    "safeTransferFrom(address,address,uint256)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    setRoles(
+      allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "safeTransferFrom(address,address,uint256,bytes)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setApprovalForAll(
-      operator: PromiseOrValue<string>,
-      approved: PromiseOrValue<boolean>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    supportsInterface(
-      interfaceId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    symbol(overrides?: CallOverrides): Promise<string>;
-
-    tokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    unpause(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
-    "Approval(address,address,uint256)"(
-      owner?: PromiseOrValue<string> | null,
-      approved?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null
-    ): ApprovalEventFilter;
-    Approval(
-      owner?: PromiseOrValue<string> | null,
-      approved?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null
-    ): ApprovalEventFilter;
+    "Paused(address)"(account?: null): PausedEventFilter;
+    Paused(account?: null): PausedEventFilter;
 
-    "ApprovalForAll(address,address,bool)"(
-      owner?: PromiseOrValue<string> | null,
-      operator?: PromiseOrValue<string> | null,
-      approved?: null
-    ): ApprovalForAllEventFilter;
-    ApprovalForAll(
-      owner?: PromiseOrValue<string> | null,
-      operator?: PromiseOrValue<string> | null,
-      approved?: null
-    ): ApprovalForAllEventFilter;
+    "Unpaused(address)"(account?: null): UnpausedEventFilter;
+    Unpaused(account?: null): UnpausedEventFilter;
 
-    "Transfer(address,address,uint256)"(
-      from?: PromiseOrValue<string> | null,
-      to?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null
-    ): TransferEventFilter;
-    Transfer(
-      from?: PromiseOrValue<string> | null,
-      to?: PromiseOrValue<string> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null
-    ): TransferEventFilter;
+    "newRoleManagerSet(address)"(
+      newRoleManagerAddress?: null
+    ): newRoleManagerSetEventFilter;
+    newRoleManagerSet(
+      newRoleManagerAddress?: null
+    ): newRoleManagerSetEventFilter;
+
+    "sharesCreated(address)"(contractAddress?: null): sharesCreatedEventFilter;
+    sharesCreated(contractAddress?: null): sharesCreatedEventFilter;
   };
 
   estimateGas: {
-    approve(
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    ACTIVE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    ADMIN(overrides?: CallOverrides): Promise<BigNumber>;
+
+    SUSPENDED(overrides?: CallOverrides): Promise<BigNumber>;
+
+    addNewRoleManager(
+      newRoleManagerAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    balanceOf(
-      owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    createTokenShares(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      shares: PromiseOrValue<BigNumberish>,
-      price: PromiseOrValue<BigNumberish>,
+    addRole(
+      roleName: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    getApproved(
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getDescription(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getReceiver(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getReceiverAddress(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getURI(overrides?: CallOverrides): Promise<BigNumber>;
-
-    isApprovedForAll(
-      owner: PromiseOrValue<string>,
-      operator: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    name(overrides?: CallOverrides): Promise<BigNumber>;
-
-    ownerOf(
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "safeTransferFrom(address,address,uint256)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    deleteRole(
+      roleName: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "safeTransferFrom(address,address,uint256,bytes)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+    initialize(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    setApprovalForAll(
-      operator: PromiseOrValue<string>,
-      approved: PromiseOrValue<boolean>,
+    mintShares(
+      NFTName: PromiseOrValue<string>,
+      NFTSymbol: PromiseOrValue<string>,
+      NFTDescription: PromiseOrValue<string>,
+      NFTUri: PromiseOrValue<string>,
+      ERC20SharesName: PromiseOrValue<string>,
+      ERC20SharesSymbol: PromiseOrValue<string>,
+      sharesAmount: PromiseOrValue<BigNumberish>,
+      sharesPrice: PromiseOrValue<BigNumberish>,
+      rightsPercentage: PromiseOrValue<BigNumberish>,
+      artistAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    supportsInterface(
-      interfaceId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
+    pause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+    paused(overrides?: CallOverrides): Promise<BigNumber>;
 
-    tokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+    setRoles(
+      allAccountRoles: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    unpause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    approve(
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    ACTIVE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    ADMIN(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    SUSPENDED(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    addNewRoleManager(
+      newRoleManagerAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    balanceOf(
-      owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    createTokenShares(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      shares: PromiseOrValue<BigNumberish>,
-      price: PromiseOrValue<BigNumberish>,
+    addRole(
+      roleName: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    getApproved(
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getDescription(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getReceiver(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getReceiverAddress(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    isApprovedForAll(
-      owner: PromiseOrValue<string>,
-      operator: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    ownerOf(
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "safeTransferFrom(address,address,uint256)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    deleteRole(
+      roleName: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "safeTransferFrom(address,address,uint256,bytes)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+    initialize(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    setApprovalForAll(
-      operator: PromiseOrValue<string>,
-      approved: PromiseOrValue<boolean>,
+    mintShares(
+      NFTName: PromiseOrValue<string>,
+      NFTSymbol: PromiseOrValue<string>,
+      NFTDescription: PromiseOrValue<string>,
+      NFTUri: PromiseOrValue<string>,
+      ERC20SharesName: PromiseOrValue<string>,
+      ERC20SharesSymbol: PromiseOrValue<string>,
+      sharesAmount: PromiseOrValue<BigNumberish>,
+      sharesPrice: PromiseOrValue<BigNumberish>,
+      rightsPercentage: PromiseOrValue<BigNumberish>,
+      artistAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    supportsInterface(
-      interfaceId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
+    pause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    tokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
+    setRoles(
+      allAccountRoles: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    unpause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

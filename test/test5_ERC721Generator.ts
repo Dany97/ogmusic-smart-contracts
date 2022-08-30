@@ -5,7 +5,7 @@ describe("ERC721Generator Tests", function(){
 
     it("create shares", async function() {
         
-        const [deployer, consumer, artist, system, active] = await ethers.getSigners();
+        const [deployer, consumer, artist, system, active, sharesAddress] = await ethers.getSigners();
         console.log(
             "Deploying the contract with the account:",
             await deployer.getAddress()
@@ -17,7 +17,7 @@ describe("ERC721Generator Tests", function(){
 
         //deploy with pablock address for mumbai network
         //the deployment mints an NFT to msg.sender(deployer)
-        const erc721Generator = await ERC721Generator.deploy("NFTProva", "PRV", "Descrizione", "www.sito.com"); 
+        const erc721Generator = await ERC721Generator.deploy("NFTProva", "PRV", "Descrizione", "www.sito.com", sharesAddress.address, artist.address); 
 
         await erc721Generator.deployed();
 
@@ -25,22 +25,19 @@ describe("ERC721Generator Tests", function(){
 
         //NFT creation tests
         
-        expect(await erc721Generator.balanceOf(deployer.address)).to.equal(1);
+        expect(await erc721Generator.balanceOf(sharesAddress.address)).to.equal(1);
         expect(await erc721Generator.name()).to.equal("NFTProva");
         expect(await erc721Generator.symbol()).to.equal("PRV");
         expect(await erc721Generator.getDescription()).to.equal("Descrizione");
         expect(await erc721Generator.getURI()).to.equal("www.sito.com");
+        expect(await erc721Generator.getLinkedERC20Contract()).to.equal(sharesAddress.address);
+        expect(await erc721Generator.getArtist()).to.equal(artist.address);
 
-        //createShares function tests
-        await erc721Generator.createTokenShares("NFTProvaShares", "PRVS", 1000, 100);
 
-        //tests if the ERC20 have been created and how many shares "deployer" owns
-        /*
-        const tokenReceiver = await ERC721Generator.getReceiver();
-        expect(await tokenReceiver.balanceOf(deployer.address)).to.equal(1000);
-        expect(await tokenReceiver.name()).to.equal("NFTProvaShares");
-        expect(await tokenReceiver.symbol()).to.equal("PRVS");
-        */
+
+        
+        
+        
 
 
 

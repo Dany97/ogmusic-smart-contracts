@@ -3,4 +3,3 @@
 /* eslint-disable */
 export type { ERC20SharesGenerator } from "./ERC20SharesGenerator";
 export type { ERC721Generator } from "./ERC721Generator";
-export type { TestNFT } from "./TestNFT";

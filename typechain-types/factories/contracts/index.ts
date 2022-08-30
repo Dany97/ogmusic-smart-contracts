@@ -4,4 +4,5 @@
 export * as utils from "./utils";
 export { RoleManager__factory } from "./RoleManager__factory";
 export { RoleObserver__factory } from "./RoleObserver__factory";
+export { TokenFactory__factory } from "./TokenFactory__factory";
 export { UserManager__factory } from "./UserManager__factory";

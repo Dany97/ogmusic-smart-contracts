@@ -15,9 +15,15 @@ require("./tasks/faucet");
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.9",
+  optimizer: {
+    enabled: true,
+    runs: 200
+  },
   networks: {
     hardhat: {
-      chainId: 1337 // We set 1337 to make interacting with MetaMask simpler
+      chainId: 1337, // We set 1337 to make interacting with MetaMask simpler
+      allowUnlimitedContractSize: true
+      
     },
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com",
@@ -25,7 +31,8 @@ module.exports = {
       accounts: [process.env.PRIVATE_KEY],
       timeout: 60000,
       gas: 2100000,
-      gasPrice: 8000000000
+      gasPrice: 8000000000,
+      allowUnlimitedContractSize: true
     },
 
     rinkeby: {
@@ -34,7 +41,8 @@ module.exports = {
       accounts: [process.env.PRIVATE_KEY],
       timeout: 60000,
       gas: 2100000,
-      gasPrice: 8000000000
+      gasPrice: 8000000000,
+      allowUnlimitedContractSize: true
     }
     
   }

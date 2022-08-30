@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">83.33% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>10/12</span>
+        <span class='fraction'>11/11</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>0/0</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">66.67% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>4/6</span>
+        <span class='fraction'>5/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">83.33% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>10/12</span>
+        <span class='fraction'>11/11</span>
       </div>
     </div>
   </div>
@@ -95,22 +95,7 @@
 50
 51
 52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+53</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -130,22 +115,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3×</span>
-<span class="cline-any cline-yes">3×</span>
-<span class="cline-any cline-yes">3×</span>
-<span class="cline-any cline-yes">3×</span>
-<span class="cline-any cline-yes">3×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -154,23 +141,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -180,60 +150,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 &nbsp;
-import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC20SharesGenerator} from "./ERC20SharesGenerator.sol";
+import "hardhat/console.sol";
 &nbsp;
 contract ERC721Generator is ERC721 {
-    string _tokenDescription;
-    string _tokenURI;
-    string _name;
-    string _symbol;
-    ERC20SharesGenerator private sharesGenerator;
+    string private _tokenDescription;
+    string private _tokenURI;
+    string private _name;
+    string private _symbol;
+    address private linkedERC20;
+    address private NFTArtist;
 &nbsp;
     constructor(
         string memory NFTName,
         string memory NFTSymbol,
         string memory description,
-        string memory uri
+        string memory uri,
+        address erc20Contract,
+        address artist
     ) ERC721(NFTName, NFTSymbol) {
         _name = NFTName;
         _symbol = NFTSymbol;
         _tokenDescription = description;
         _tokenURI = uri;
-        _safeMint(msg.sender, 1);
-    }
-&nbsp;
-    /*
-    function NFTSelfMint() public {
-        _safeMint(msg.sender, 1);
-    }
-    */
-&nbsp;
-    function createTokenShares(
-        string memory name,
-        string memory symbol,
-        uint256 shares,
-        uint256 price
-    ) public {
-        sharesGenerator = new ERC20SharesGenerator(
-            name,
-            symbol,
-            msg.sender,
-            price
-        );
-&nbsp;
-        safeTransferFrom(msg.sender, address(sharesGenerator), 1);
-&nbsp;
-        sharesGenerator.mint(msg.sender, shares);
-    }
-&nbsp;
-<span class="fstat-no" title="function not covered" >    function getSharesGenerator() public view returns (ERC20SharesGenerator) {</span>
-<span class="cstat-no" title="statement not covered" >        return sharesGenerator;</span>
-    }
-&nbsp;
-<span class="fstat-no" title="function not covered" >    function getSharesGeneratorAddress() public view returns (address) {</span>
-<span class="cstat-no" title="statement not covered" >        return address(sharesGenerator);</span>
+        _safeMint(erc20Contract, 1);
+        linkedERC20 = erc20Contract;
+        NFTArtist = artist;
     }
 &nbsp;
     function getDescription() public view returns (string memory) {
@@ -243,6 +186,18 @@ contract ERC721Generator is ERC721 {
     function getURI() public view returns (string memory) {
         return _tokenURI;
     }
+&nbsp;
+    function getArtist() public view returns (address artist) {
+        return NFTArtist;
+    }
+&nbsp;
+    function getLinkedERC20Contract()
+        public
+        view
+        returns (address erc20Contract)
+    {
+        return linkedERC20;
+    }
 }
 &nbsp;</pre></td></tr>
 </table></pre>
@@ -250,7 +205,7 @@ contract ERC721Generator is ERC721 {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Aug 23 2022 18:26:32 GMT+0200 (Ora legale dell’Europa centrale)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Aug 30 2022 10:12:11 GMT+0200 (Ora legale dell’Europa centrale)
 </div>
 </div>
 <script src="../../prettify.js"></script>

@@ -31,11 +31,10 @@ export interface ERC721GeneratorInterface extends utils.Interface {
   functions: {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "createTokenShares(string,string,uint256,uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
+    "getArtist()": FunctionFragment;
     "getDescription()": FunctionFragment;
-    "getSharesGenerator()": FunctionFragment;
-    "getSharesGeneratorAddress()": FunctionFragment;
+    "getLinkedERC20Contract()": FunctionFragment;
     "getURI()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "name()": FunctionFragment;
@@ -53,11 +52,10 @@ export interface ERC721GeneratorInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "approve"
       | "balanceOf"
-      | "createTokenShares"
       | "getApproved"
+      | "getArtist"
       | "getDescription"
-      | "getSharesGenerator"
-      | "getSharesGeneratorAddress"
+      | "getLinkedERC20Contract"
       | "getURI"
       | "isApprovedForAll"
       | "name"
@@ -80,28 +78,16 @@ export interface ERC721GeneratorInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "createTokenShares",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
     functionFragment: "getApproved",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "getArtist", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getDescription",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getSharesGenerator",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getSharesGeneratorAddress",
+    functionFragment: "getLinkedERC20Contract",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "getURI", values?: undefined): string;
@@ -156,23 +142,16 @@ export interface ERC721GeneratorInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "createTokenShares",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getArtist", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getDescription",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getSharesGenerator",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getSharesGeneratorAddress",
+    functionFragment: "getLinkedERC20Contract",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getURI", data: BytesLike): Result;
@@ -290,24 +269,20 @@ export interface ERC721Generator extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    createTokenShares(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      shares: PromiseOrValue<BigNumberish>,
-      price: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    getArtist(
+      overrides?: CallOverrides
+    ): Promise<[string] & { artist: string }>;
+
     getDescription(overrides?: CallOverrides): Promise<[string]>;
 
-    getSharesGenerator(overrides?: CallOverrides): Promise<[string]>;
-
-    getSharesGeneratorAddress(overrides?: CallOverrides): Promise<[string]>;
+    getLinkedERC20Contract(
+      overrides?: CallOverrides
+    ): Promise<[string] & { erc20Contract: string }>;
 
     getURI(overrides?: CallOverrides): Promise<[string]>;
 
@@ -376,24 +351,16 @@ export interface ERC721Generator extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  createTokenShares(
-    name: PromiseOrValue<string>,
-    symbol: PromiseOrValue<string>,
-    shares: PromiseOrValue<BigNumberish>,
-    price: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   getApproved(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
+  getArtist(overrides?: CallOverrides): Promise<string>;
+
   getDescription(overrides?: CallOverrides): Promise<string>;
 
-  getSharesGenerator(overrides?: CallOverrides): Promise<string>;
-
-  getSharesGeneratorAddress(overrides?: CallOverrides): Promise<string>;
+  getLinkedERC20Contract(overrides?: CallOverrides): Promise<string>;
 
   getURI(overrides?: CallOverrides): Promise<string>;
 
@@ -462,24 +429,16 @@ export interface ERC721Generator extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    createTokenShares(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      shares: PromiseOrValue<BigNumberish>,
-      price: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
+    getArtist(overrides?: CallOverrides): Promise<string>;
+
     getDescription(overrides?: CallOverrides): Promise<string>;
 
-    getSharesGenerator(overrides?: CallOverrides): Promise<string>;
-
-    getSharesGeneratorAddress(overrides?: CallOverrides): Promise<string>;
+    getLinkedERC20Contract(overrides?: CallOverrides): Promise<string>;
 
     getURI(overrides?: CallOverrides): Promise<string>;
 
@@ -584,24 +543,16 @@ export interface ERC721Generator extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    createTokenShares(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      shares: PromiseOrValue<BigNumberish>,
-      price: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getArtist(overrides?: CallOverrides): Promise<BigNumber>;
+
     getDescription(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getSharesGenerator(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getSharesGeneratorAddress(overrides?: CallOverrides): Promise<BigNumber>;
+    getLinkedERC20Contract(overrides?: CallOverrides): Promise<BigNumber>;
 
     getURI(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -671,26 +622,16 @@ export interface ERC721Generator extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    createTokenShares(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      shares: PromiseOrValue<BigNumberish>,
-      price: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getArtist(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getDescription(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getSharesGenerator(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getSharesGeneratorAddress(
+    getLinkedERC20Contract(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
