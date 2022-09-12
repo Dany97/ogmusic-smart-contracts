@@ -13,11 +13,7 @@ import type {
   Signer,
   utils,
 } from "ethers";
-import type {
-  FunctionFragment,
-  Result,
-  EventFragment,
-} from "@ethersproject/abi";
+import type { FunctionFragment, Result } from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
@@ -30,37 +26,28 @@ import type {
 export interface TokenFactoryInterface extends utils.Interface {
   functions: {
     "ACTIVE()": FunctionFragment;
-    "ADMIN()": FunctionFragment;
     "SUSPENDED()": FunctionFragment;
     "addNewRoleManager(address)": FunctionFragment;
     "addRole(string)": FunctionFragment;
     "deleteRole(string)": FunctionFragment;
     "initialize()": FunctionFragment;
-    "mintShares(string,string,string,string,string,string,uint256,uint256,uint256,address)": FunctionFragment;
-    "pause()": FunctionFragment;
-    "paused()": FunctionFragment;
+    "mintShares(string,string,string,string,uint256,uint256,address)": FunctionFragment;
     "setRoles(bytes32[])": FunctionFragment;
-    "unpause()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "ACTIVE"
-      | "ADMIN"
       | "SUSPENDED"
       | "addNewRoleManager"
       | "addRole"
       | "deleteRole"
       | "initialize"
       | "mintShares"
-      | "pause"
-      | "paused"
       | "setRoles"
-      | "unpause"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "ACTIVE", values?: undefined): string;
-  encodeFunctionData(functionFragment: "ADMIN", values?: undefined): string;
   encodeFunctionData(functionFragment: "SUSPENDED", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "addNewRoleManager",
@@ -85,24 +72,17 @@ export interface TokenFactoryInterface extends utils.Interface {
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>
     ]
   ): string;
-  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
-  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "setRoles",
     values: [PromiseOrValue<BytesLike>[]]
   ): string;
-  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "ACTIVE", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "ADMIN", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "SUSPENDED", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "addNewRoleManager",
@@ -112,55 +92,10 @@ export interface TokenFactoryInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "deleteRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintShares", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setRoles", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
 
-  events: {
-    "Paused(address)": EventFragment;
-    "Unpaused(address)": EventFragment;
-    "newRoleManagerSet(address)": EventFragment;
-    "sharesCreated(address)": EventFragment;
-  };
-
-  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "newRoleManagerSet"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "sharesCreated"): EventFragment;
+  events: {};
 }
-
-export interface PausedEventObject {
-  account: string;
-}
-export type PausedEvent = TypedEvent<[string], PausedEventObject>;
-
-export type PausedEventFilter = TypedEventFilter<PausedEvent>;
-
-export interface UnpausedEventObject {
-  account: string;
-}
-export type UnpausedEvent = TypedEvent<[string], UnpausedEventObject>;
-
-export type UnpausedEventFilter = TypedEventFilter<UnpausedEvent>;
-
-export interface newRoleManagerSetEventObject {
-  newRoleManagerAddress: string;
-}
-export type newRoleManagerSetEvent = TypedEvent<
-  [string],
-  newRoleManagerSetEventObject
->;
-
-export type newRoleManagerSetEventFilter =
-  TypedEventFilter<newRoleManagerSetEvent>;
-
-export interface sharesCreatedEventObject {
-  contractAddress: string;
-}
-export type sharesCreatedEvent = TypedEvent<[string], sharesCreatedEventObject>;
-
-export type sharesCreatedEventFilter = TypedEventFilter<sharesCreatedEvent>;
 
 export interface TokenFactory extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -191,8 +126,6 @@ export interface TokenFactory extends BaseContract {
   functions: {
     ACTIVE(overrides?: CallOverrides): Promise<[string]>;
 
-    ADMIN(overrides?: CallOverrides): Promise<[string]>;
-
     SUSPENDED(overrides?: CallOverrides): Promise<[string]>;
 
     addNewRoleManager(
@@ -219,34 +152,19 @@ export interface TokenFactory extends BaseContract {
       NFTSymbol: PromiseOrValue<string>,
       NFTDescription: PromiseOrValue<string>,
       NFTUri: PromiseOrValue<string>,
-      ERC20SharesName: PromiseOrValue<string>,
-      ERC20SharesSymbol: PromiseOrValue<string>,
       sharesAmount: PromiseOrValue<BigNumberish>,
       sharesPrice: PromiseOrValue<BigNumberish>,
-      rightsPercentage: PromiseOrValue<BigNumberish>,
       artistAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    pause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    paused(overrides?: CallOverrides): Promise<[boolean]>;
 
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    unpause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
   };
 
   ACTIVE(overrides?: CallOverrides): Promise<string>;
-
-  ADMIN(overrides?: CallOverrides): Promise<string>;
 
   SUSPENDED(overrides?: CallOverrides): Promise<string>;
 
@@ -274,34 +192,19 @@ export interface TokenFactory extends BaseContract {
     NFTSymbol: PromiseOrValue<string>,
     NFTDescription: PromiseOrValue<string>,
     NFTUri: PromiseOrValue<string>,
-    ERC20SharesName: PromiseOrValue<string>,
-    ERC20SharesSymbol: PromiseOrValue<string>,
     sharesAmount: PromiseOrValue<BigNumberish>,
     sharesPrice: PromiseOrValue<BigNumberish>,
-    rightsPercentage: PromiseOrValue<BigNumberish>,
     artistAddress: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
-
-  pause(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  paused(overrides?: CallOverrides): Promise<boolean>;
 
   setRoles(
     allAccountRoles: PromiseOrValue<BytesLike>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  unpause(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   callStatic: {
     ACTIVE(overrides?: CallOverrides): Promise<string>;
-
-    ADMIN(overrides?: CallOverrides): Promise<string>;
 
     SUSPENDED(overrides?: CallOverrides): Promise<string>;
 
@@ -327,49 +230,22 @@ export interface TokenFactory extends BaseContract {
       NFTSymbol: PromiseOrValue<string>,
       NFTDescription: PromiseOrValue<string>,
       NFTUri: PromiseOrValue<string>,
-      ERC20SharesName: PromiseOrValue<string>,
-      ERC20SharesSymbol: PromiseOrValue<string>,
       sharesAmount: PromiseOrValue<BigNumberish>,
       sharesPrice: PromiseOrValue<BigNumberish>,
-      rightsPercentage: PromiseOrValue<BigNumberish>,
       artistAddress: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<string>;
-
-    pause(overrides?: CallOverrides): Promise<void>;
-
-    paused(overrides?: CallOverrides): Promise<boolean>;
+    ): Promise<void>;
 
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: CallOverrides
     ): Promise<void>;
-
-    unpause(overrides?: CallOverrides): Promise<void>;
   };
 
-  filters: {
-    "Paused(address)"(account?: null): PausedEventFilter;
-    Paused(account?: null): PausedEventFilter;
-
-    "Unpaused(address)"(account?: null): UnpausedEventFilter;
-    Unpaused(account?: null): UnpausedEventFilter;
-
-    "newRoleManagerSet(address)"(
-      newRoleManagerAddress?: null
-    ): newRoleManagerSetEventFilter;
-    newRoleManagerSet(
-      newRoleManagerAddress?: null
-    ): newRoleManagerSetEventFilter;
-
-    "sharesCreated(address)"(contractAddress?: null): sharesCreatedEventFilter;
-    sharesCreated(contractAddress?: null): sharesCreatedEventFilter;
-  };
+  filters: {};
 
   estimateGas: {
     ACTIVE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    ADMIN(overrides?: CallOverrides): Promise<BigNumber>;
 
     SUSPENDED(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -397,35 +273,20 @@ export interface TokenFactory extends BaseContract {
       NFTSymbol: PromiseOrValue<string>,
       NFTDescription: PromiseOrValue<string>,
       NFTUri: PromiseOrValue<string>,
-      ERC20SharesName: PromiseOrValue<string>,
-      ERC20SharesSymbol: PromiseOrValue<string>,
       sharesAmount: PromiseOrValue<BigNumberish>,
       sharesPrice: PromiseOrValue<BigNumberish>,
-      rightsPercentage: PromiseOrValue<BigNumberish>,
       artistAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    pause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    paused(overrides?: CallOverrides): Promise<BigNumber>;
-
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    unpause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     ACTIVE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    ADMIN(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     SUSPENDED(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -453,27 +314,14 @@ export interface TokenFactory extends BaseContract {
       NFTSymbol: PromiseOrValue<string>,
       NFTDescription: PromiseOrValue<string>,
       NFTUri: PromiseOrValue<string>,
-      ERC20SharesName: PromiseOrValue<string>,
-      ERC20SharesSymbol: PromiseOrValue<string>,
       sharesAmount: PromiseOrValue<BigNumberish>,
       sharesPrice: PromiseOrValue<BigNumberish>,
-      rightsPercentage: PromiseOrValue<BigNumberish>,
       artistAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    pause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    unpause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

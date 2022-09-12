@@ -29,16 +29,15 @@ import type {
 
 export interface ERC20SharesGeneratorInterface extends utils.Interface {
   functions: {
+    "_owner()": FunctionFragment;
+    "_price()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
-    "getLinkedNFT()": FunctionFragment;
-    "getPrice()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "linkNFT(address)": FunctionFragment;
-    "mint(address,uint256)": FunctionFragment;
+    "mint(address,uint256,address)": FunctionFragment;
     "name()": FunctionFragment;
     "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -49,15 +48,14 @@ export interface ERC20SharesGeneratorInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "_owner"
+      | "_price"
       | "allowance"
       | "approve"
       | "balanceOf"
       | "decimals"
       | "decreaseAllowance"
-      | "getLinkedNFT"
-      | "getPrice"
       | "increaseAllowance"
-      | "linkNFT"
       | "mint"
       | "name"
       | "onERC721Received"
@@ -67,6 +65,8 @@ export interface ERC20SharesGeneratorInterface extends utils.Interface {
       | "transferFrom"
   ): FunctionFragment;
 
+  encodeFunctionData(functionFragment: "_owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: "_price", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "allowance",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
@@ -85,21 +85,16 @@ export interface ERC20SharesGeneratorInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getLinkedNFT",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "getPrice", values?: undefined): string;
-  encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "linkNFT",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "mint",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
@@ -129,6 +124,8 @@ export interface ERC20SharesGeneratorInterface extends utils.Interface {
     ]
   ): string;
 
+  decodeFunctionResult(functionFragment: "_owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "_price", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -138,15 +135,9 @@ export interface ERC20SharesGeneratorInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getLinkedNFT",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getPrice", data: BytesLike): Result;
-  decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "linkNFT", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
@@ -224,6 +215,10 @@ export interface ERC20SharesGenerator extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    _owner(overrides?: CallOverrides): Promise<[string]>;
+
+    _price(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
@@ -249,28 +244,16 @@ export interface ERC20SharesGenerator extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    getLinkedNFT(
-      overrides?: CallOverrides
-    ): Promise<[string] & { nftAddress: string }>;
-
-    getPrice(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { price: BigNumber }>;
-
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    linkNFT(
-      nftAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     mint(
       minter: PromiseOrValue<string>,
       shares: PromiseOrValue<BigNumberish>,
+      nftAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -302,6 +285,10 @@ export interface ERC20SharesGenerator extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
+  _owner(overrides?: CallOverrides): Promise<string>;
+
+  _price(overrides?: CallOverrides): Promise<BigNumber>;
+
   allowance(
     owner: PromiseOrValue<string>,
     spender: PromiseOrValue<string>,
@@ -327,24 +314,16 @@ export interface ERC20SharesGenerator extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  getLinkedNFT(overrides?: CallOverrides): Promise<string>;
-
-  getPrice(overrides?: CallOverrides): Promise<BigNumber>;
-
   increaseAllowance(
     spender: PromiseOrValue<string>,
     addedValue: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  linkNFT(
-    nftAddress: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   mint(
     minter: PromiseOrValue<string>,
     shares: PromiseOrValue<BigNumberish>,
+    nftAddress: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -376,6 +355,10 @@ export interface ERC20SharesGenerator extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    _owner(overrides?: CallOverrides): Promise<string>;
+
+    _price(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
@@ -401,24 +384,16 @@ export interface ERC20SharesGenerator extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    getLinkedNFT(overrides?: CallOverrides): Promise<string>;
-
-    getPrice(overrides?: CallOverrides): Promise<BigNumber>;
-
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    linkNFT(
-      nftAddress: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     mint(
       minter: PromiseOrValue<string>,
       shares: PromiseOrValue<BigNumberish>,
+      nftAddress: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -475,6 +450,10 @@ export interface ERC20SharesGenerator extends BaseContract {
   };
 
   estimateGas: {
+    _owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    _price(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
@@ -500,24 +479,16 @@ export interface ERC20SharesGenerator extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    getLinkedNFT(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getPrice(overrides?: CallOverrides): Promise<BigNumber>;
-
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    linkNFT(
-      nftAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     mint(
       minter: PromiseOrValue<string>,
       shares: PromiseOrValue<BigNumberish>,
+      nftAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -550,6 +521,10 @@ export interface ERC20SharesGenerator extends BaseContract {
   };
 
   populateTransaction: {
+    _owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    _price(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     allowance(
       owner: PromiseOrValue<string>,
       spender: PromiseOrValue<string>,
@@ -575,24 +550,16 @@ export interface ERC20SharesGenerator extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    getLinkedNFT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    linkNFT(
-      nftAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     mint(
       minter: PromiseOrValue<string>,
       shares: PromiseOrValue<BigNumberish>,
+      nftAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

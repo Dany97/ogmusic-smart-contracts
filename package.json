@@ -29,9 +29,17 @@
     "ethers": "^5.4.7",
     "hardhat": "^2.9.9",
     "hardhat-gas-reporter": "^1.0.8",
-    "solidity-coverage": "^0.7.21"
+    "solidity-coverage": "^0.7.21",
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "pablock-smart-contracts": "git+https://github.com/bcode-tech/Pablock-Smart-Contracts"
+    "@typechain/ethers-v5": "^10.1.0",
+    "@typechain/hardhat": "^6.1.2",
+    "ethereum-libraries-string-utils": "^1.2.1",
+    "github.com": "^1.0.0",
+    "hardhat-contract-sizer": "^2.6.1",
+    "pablock-smart-contracts": "git+https://github.com/bcode-tech/Pablock-Smart-Contracts",
+    "solidity-stringutils": "https://github.com/Arachnid/solidity-stringutils.git",
+    "typechain": "^8.1.0"
   }
 }

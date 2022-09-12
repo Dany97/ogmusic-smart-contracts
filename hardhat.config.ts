@@ -2,6 +2,7 @@ import "@nomiclabs/hardhat-ethers";
 
 require("@nomicfoundation/hardhat-toolbox");
 import "@nomicfoundation/hardhat-chai-matchers";
+import "hardhat-contract-sizer";
 
 
 
@@ -27,7 +28,7 @@ module.exports = {
     },
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com",
-      chainId: 13881,
+      chainId: 80001,
       accounts: [process.env.PRIVATE_KEY],
       timeout: 60000,
       gas: 2100000,

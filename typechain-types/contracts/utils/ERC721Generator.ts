@@ -32,10 +32,6 @@ export interface ERC721GeneratorInterface extends utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
-    "getArtist()": FunctionFragment;
-    "getDescription()": FunctionFragment;
-    "getLinkedERC20Contract()": FunctionFragment;
-    "getURI()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "name()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
@@ -53,10 +49,6 @@ export interface ERC721GeneratorInterface extends utils.Interface {
       | "approve"
       | "balanceOf"
       | "getApproved"
-      | "getArtist"
-      | "getDescription"
-      | "getLinkedERC20Contract"
-      | "getURI"
       | "isApprovedForAll"
       | "name"
       | "ownerOf"
@@ -81,16 +73,6 @@ export interface ERC721GeneratorInterface extends utils.Interface {
     functionFragment: "getApproved",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(functionFragment: "getArtist", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "getDescription",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getLinkedERC20Contract",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "getURI", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
@@ -145,16 +127,6 @@ export interface ERC721GeneratorInterface extends utils.Interface {
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "getArtist", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getDescription",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getLinkedERC20Contract",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
@@ -274,18 +246,6 @@ export interface ERC721Generator extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    getArtist(
-      overrides?: CallOverrides
-    ): Promise<[string] & { artist: string }>;
-
-    getDescription(overrides?: CallOverrides): Promise<[string]>;
-
-    getLinkedERC20Contract(
-      overrides?: CallOverrides
-    ): Promise<[string] & { erc20Contract: string }>;
-
-    getURI(overrides?: CallOverrides): Promise<[string]>;
-
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -356,14 +316,6 @@ export interface ERC721Generator extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  getArtist(overrides?: CallOverrides): Promise<string>;
-
-  getDescription(overrides?: CallOverrides): Promise<string>;
-
-  getLinkedERC20Contract(overrides?: CallOverrides): Promise<string>;
-
-  getURI(overrides?: CallOverrides): Promise<string>;
-
   isApprovedForAll(
     owner: PromiseOrValue<string>,
     operator: PromiseOrValue<string>,
@@ -433,14 +385,6 @@ export interface ERC721Generator extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
-
-    getArtist(overrides?: CallOverrides): Promise<string>;
-
-    getDescription(overrides?: CallOverrides): Promise<string>;
-
-    getLinkedERC20Contract(overrides?: CallOverrides): Promise<string>;
-
-    getURI(overrides?: CallOverrides): Promise<string>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -548,14 +492,6 @@ export interface ERC721Generator extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getArtist(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getDescription(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getLinkedERC20Contract(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getURI(overrides?: CallOverrides): Promise<BigNumber>;
-
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -626,16 +562,6 @@ export interface ERC721Generator extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    getArtist(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getDescription(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getLinkedERC20Contract(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,

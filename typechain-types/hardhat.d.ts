@@ -85,9 +85,17 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.RoleObserver__factory>;
     getContractFactory(
+      name: "RoyaltiesManager",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.RoyaltiesManager__factory>;
+    getContractFactory(
       name: "TokenFactory",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.TokenFactory__factory>;
+    getContractFactory(
+      name: "TokenShop",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TokenShop__factory>;
     getContractFactory(
       name: "UserManager",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -200,10 +208,20 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.RoleObserver>;
     getContractAt(
+      name: "RoyaltiesManager",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.RoyaltiesManager>;
+    getContractAt(
       name: "TokenFactory",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.TokenFactory>;
+    getContractAt(
+      name: "TokenShop",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TokenShop>;
     getContractAt(
       name: "UserManager",
       address: string,

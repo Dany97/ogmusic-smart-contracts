@@ -5,5 +5,7 @@ import type * as utils from "./utils";
 export type { utils };
 export type { RoleManager } from "./RoleManager";
 export type { RoleObserver } from "./RoleObserver";
+export type { RoyaltiesManager } from "./RoyaltiesManager";
 export type { TokenFactory } from "./TokenFactory";
+export type { TokenShop } from "./TokenShop";
 export type { UserManager } from "./UserManager";

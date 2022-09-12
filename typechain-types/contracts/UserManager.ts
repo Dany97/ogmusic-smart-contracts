@@ -30,7 +30,6 @@ import type {
 export interface UserManagerInterface extends utils.Interface {
   functions: {
     "ACTIVE()": FunctionFragment;
-    "ADMIN()": FunctionFragment;
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "SUSPENDED()": FunctionFragment;
     "addNewRoleManager(address)": FunctionFragment;
@@ -45,22 +44,18 @@ export interface UserManagerInterface extends utils.Interface {
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "initialize()": FunctionFragment;
-    "pause()": FunctionFragment;
-    "paused()": FunctionFragment;
     "registry(address)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "setRoles(bytes32[])": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "unbanUser(address)": FunctionFragment;
-    "unpause()": FunctionFragment;
     "updateUser(address,string[])": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "ACTIVE"
-      | "ADMIN"
       | "DEFAULT_ADMIN_ROLE"
       | "SUSPENDED"
       | "addNewRoleManager"
@@ -75,20 +70,16 @@ export interface UserManagerInterface extends utils.Interface {
       | "grantRole"
       | "hasRole"
       | "initialize"
-      | "pause"
-      | "paused"
       | "registry"
       | "renounceRole"
       | "revokeRole"
       | "setRoles"
       | "supportsInterface"
       | "unbanUser"
-      | "unpause"
       | "updateUser"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "ACTIVE", values?: undefined): string;
-  encodeFunctionData(functionFragment: "ADMIN", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "DEFAULT_ADMIN_ROLE",
     values?: undefined
@@ -142,8 +133,6 @@ export interface UserManagerInterface extends utils.Interface {
     functionFragment: "initialize",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
-  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "registry",
     values: [PromiseOrValue<string>]
@@ -168,14 +157,12 @@ export interface UserManagerInterface extends utils.Interface {
     functionFragment: "unbanUser",
     values: [PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "updateUser",
     values: [PromiseOrValue<string>, PromiseOrValue<string>[]]
   ): string;
 
   decodeFunctionResult(functionFragment: "ACTIVE", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "ADMIN", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
     data: BytesLike
@@ -205,8 +192,6 @@ export interface UserManagerInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceRole",
@@ -219,40 +204,26 @@ export interface UserManagerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "unbanUser", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "updateUser", data: BytesLike): Result;
 
   events: {
-    "Paused(address)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
-    "Unpaused(address)": EventFragment;
     "UserIsActivated(address)": EventFragment;
     "UserIsBanned(address)": EventFragment;
     "UserIsRegistered(address,string[])": EventFragment;
     "UserIsUnbanned(address)": EventFragment;
-    "newRoleManagerSet(address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "UserIsActivated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "UserIsBanned"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "UserIsRegistered"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "UserIsUnbanned"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "newRoleManagerSet"): EventFragment;
 }
-
-export interface PausedEventObject {
-  account: string;
-}
-export type PausedEvent = TypedEvent<[string], PausedEventObject>;
-
-export type PausedEventFilter = TypedEventFilter<PausedEvent>;
 
 export interface RoleAdminChangedEventObject {
   role: string;
@@ -290,13 +261,6 @@ export type RoleRevokedEvent = TypedEvent<
 >;
 
 export type RoleRevokedEventFilter = TypedEventFilter<RoleRevokedEvent>;
-
-export interface UnpausedEventObject {
-  account: string;
-}
-export type UnpausedEvent = TypedEvent<[string], UnpausedEventObject>;
-
-export type UnpausedEventFilter = TypedEventFilter<UnpausedEvent>;
 
 export interface UserIsActivatedEventObject {
   user: string;
@@ -337,17 +301,6 @@ export type UserIsUnbannedEvent = TypedEvent<
 
 export type UserIsUnbannedEventFilter = TypedEventFilter<UserIsUnbannedEvent>;
 
-export interface newRoleManagerSetEventObject {
-  newRoleManagerAddress: string;
-}
-export type newRoleManagerSetEvent = TypedEvent<
-  [string],
-  newRoleManagerSetEventObject
->;
-
-export type newRoleManagerSetEventFilter =
-  TypedEventFilter<newRoleManagerSetEvent>;
-
 export interface UserManager extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
@@ -376,8 +329,6 @@ export interface UserManager extends BaseContract {
 
   functions: {
     ACTIVE(overrides?: CallOverrides): Promise<[string]>;
-
-    ADMIN(overrides?: CallOverrides): Promise<[string]>;
 
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
@@ -446,12 +397,6 @@ export interface UserManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    pause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    paused(overrides?: CallOverrides): Promise<[boolean]>;
-
     registry(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -484,10 +429,6 @@ export interface UserManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    unpause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     updateUser(
       user: PromiseOrValue<string>,
       newRoles: PromiseOrValue<string>[],
@@ -496,8 +437,6 @@ export interface UserManager extends BaseContract {
   };
 
   ACTIVE(overrides?: CallOverrides): Promise<string>;
-
-  ADMIN(overrides?: CallOverrides): Promise<string>;
 
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
@@ -566,12 +505,6 @@ export interface UserManager extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  pause(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  paused(overrides?: CallOverrides): Promise<boolean>;
-
   registry(
     arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -604,10 +537,6 @@ export interface UserManager extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  unpause(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   updateUser(
     user: PromiseOrValue<string>,
     newRoles: PromiseOrValue<string>[],
@@ -616,8 +545,6 @@ export interface UserManager extends BaseContract {
 
   callStatic: {
     ACTIVE(overrides?: CallOverrides): Promise<string>;
-
-    ADMIN(overrides?: CallOverrides): Promise<string>;
 
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
@@ -684,10 +611,6 @@ export interface UserManager extends BaseContract {
 
     initialize(overrides?: CallOverrides): Promise<void>;
 
-    pause(overrides?: CallOverrides): Promise<void>;
-
-    paused(overrides?: CallOverrides): Promise<boolean>;
-
     registry(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -720,8 +643,6 @@ export interface UserManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    unpause(overrides?: CallOverrides): Promise<void>;
-
     updateUser(
       user: PromiseOrValue<string>,
       newRoles: PromiseOrValue<string>[],
@@ -730,9 +651,6 @@ export interface UserManager extends BaseContract {
   };
 
   filters: {
-    "Paused(address)"(account?: null): PausedEventFilter;
-    Paused(account?: null): PausedEventFilter;
-
     "RoleAdminChanged(bytes32,bytes32,bytes32)"(
       role?: PromiseOrValue<BytesLike> | null,
       previousAdminRole?: PromiseOrValue<BytesLike> | null,
@@ -766,9 +684,6 @@ export interface UserManager extends BaseContract {
       sender?: PromiseOrValue<string> | null
     ): RoleRevokedEventFilter;
 
-    "Unpaused(address)"(account?: null): UnpausedEventFilter;
-    Unpaused(account?: null): UnpausedEventFilter;
-
     "UserIsActivated(address)"(
       user?: PromiseOrValue<string> | null
     ): UserIsActivatedEventFilter;
@@ -796,19 +711,10 @@ export interface UserManager extends BaseContract {
     UserIsUnbanned(
       user?: PromiseOrValue<string> | null
     ): UserIsUnbannedEventFilter;
-
-    "newRoleManagerSet(address)"(
-      newRoleManagerAddress?: null
-    ): newRoleManagerSetEventFilter;
-    newRoleManagerSet(
-      newRoleManagerAddress?: null
-    ): newRoleManagerSetEventFilter;
   };
 
   estimateGas: {
     ACTIVE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    ADMIN(overrides?: CallOverrides): Promise<BigNumber>;
 
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -877,12 +783,6 @@ export interface UserManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    pause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    paused(overrides?: CallOverrides): Promise<BigNumber>;
-
     registry(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -915,10 +815,6 @@ export interface UserManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    unpause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     updateUser(
       user: PromiseOrValue<string>,
       newRoles: PromiseOrValue<string>[],
@@ -928,8 +824,6 @@ export interface UserManager extends BaseContract {
 
   populateTransaction: {
     ACTIVE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    ADMIN(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     DEFAULT_ADMIN_ROLE(
       overrides?: CallOverrides
@@ -1000,12 +894,6 @@ export interface UserManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    pause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     registry(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1035,10 +923,6 @@ export interface UserManager extends BaseContract {
 
     unbanUser(
       userAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    unpause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

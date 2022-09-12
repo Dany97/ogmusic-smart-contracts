@@ -3,15 +3,13 @@ pragma solidity >=0.4.22 <0.9.0;
 //SPDX-License-Identifier: UNLICENSED
 
 import "./RoleManager.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
 
-abstract contract RoleObserver is Pausable {
+abstract contract RoleObserver {
     address deployer;
     RoleManager roleManager;
     address roleManagerAddress;
 
-    bytes32 public constant ADMIN = keccak256("ADMIN");
+    //bytes32 public constant ADMIN = keccak256("ADMIN");
     bytes32 public constant ACTIVE = keccak256("ACTIVE");
     bytes32 public constant SUSPENDED = keccak256("SUSPENDED");
 
@@ -22,49 +20,32 @@ abstract contract RoleObserver is Pausable {
     */
 
     modifier onlyRoleManager() {
-        require(
-            msg.sender == roleManagerAddress,
-            "RoleObserver: Function is restricted to RoleManager."
-        );
+        require(msg.sender == roleManagerAddress);
         _;
     }
 
     modifier onlyAdmin() {
-        require(
-            roleManager.isAdmin(msg.sender),
-            "RoleObserver: Function is restricted to ADMIN."
-        );
+        require(roleManager.isAdmin(msg.sender));
         _;
     }
 
     modifier onlyOnce() {
-        if (deployer != address(0))
-            require(
-                msg.sender == deployer,
-                "RoleObserver: Function is restricted to contract's deployer."
-            );
-        else revert("RoleObserver: Function cannot be called more than once.");
+        if (deployer != address(0)) require(msg.sender == deployer);
+        else revert();
         _;
     }
-
-    event newRoleManagerSet(address newRoleManagerAddress);
 
     function addNewRoleManager(address newRoleManagerAddress)
         external
         onlyAdmin
     {
-        require(
-            newRoleManagerAddress != address(0),
-            "RoleObserver: You are trying to set RoleManager to address(0)."
-        );
+        require(newRoleManagerAddress != address(0));
         roleManagerAddress = newRoleManagerAddress;
         roleManager = RoleManager(newRoleManagerAddress);
         roleManager.registerAsRoleObserver(address(this));
-
-        emit newRoleManagerSet(newRoleManagerAddress);
     }
 
-    function addRole(string calldata roleName) public onlyRoleManager {
+    function addRole(string calldata roleName) external onlyRoleManager {
         _ACCOUNTROLES.push(keccak256(abi.encodePacked(roleName)));
     }
 
@@ -83,18 +64,10 @@ abstract contract RoleObserver is Pausable {
     }
 
     function setRoles(bytes32[] calldata allAccountRoles)
-        public
+        external
         onlyRoleManager
     {
         for (uint256 i = 0; i < allAccountRoles.length; i++)
             _ACCOUNTROLES.push(allAccountRoles[i]);
-    }
-
-    function pause() public whenNotPaused onlyAdmin {
-        super._pause();
-    }
-
-    function unpause() public whenPaused onlyAdmin {
-        super._unpause();
     }
 }

@@ -4,20 +4,14 @@ pragma solidity ^0.8.9;
 import {ERC721Generator} from "./utils/ERC721Generator.sol";
 import {ERC20SharesGenerator} from "./utils/ERC20SharesGenerator.sol";
 import "./RoleObserver.sol";
-import "hardhat/console.sol";
 
 contract TokenFactory is RoleObserver {
     constructor(address initialRoleManagerAddress) {
-        require(
-            initialRoleManagerAddress != address(0),
-            "TokenFactory: RoleManager address must not be zero."
-        );
+        require(initialRoleManagerAddress != address(0));
         roleManagerAddress = initialRoleManagerAddress;
         roleManager = RoleManager(initialRoleManagerAddress);
         deployer = msg.sender;
     }
-
-    event sharesCreated(address contractAddress);
 
     function initialize() public onlyOnce {
         /* The roleManager is registered as an observer of RoleManager's state, effects are:
@@ -35,25 +29,20 @@ contract TokenFactory is RoleObserver {
         string memory NFTSymbol,
         string memory NFTDescription,
         string memory NFTUri,
-        string memory ERC20SharesName,
-        string memory ERC20SharesSymbol,
+        //string memory ERC20SharesName,
+        //string memory ERC20SharesSymbol,
         uint256 sharesAmount,
         uint256 sharesPrice,
-        uint256 rightsPercentage,
         address artistAddress
-    ) public onlyAdmin returns (address sharesAddress) {
+    ) external onlyAdmin {
         ERC20SharesGenerator sharesGenerator = new ERC20SharesGenerator(
-            ERC20SharesName,
-            ERC20SharesSymbol,
-            sharesPrice,
-            rightsPercentage
+            //ERC20SharesName,
+            //ERC20SharesSymbol,
+            NFTName,
+            NFTSymbol,
+            sharesPrice
         );
-        /*
-        console.log(
-            "ERC20SharesGenerator deployed at: ",
-            address(sharesGenerator)
-        );
-        */
+
         ERC721Generator nftGenerator = new ERC721Generator(
             NFTName,
             NFTSymbol,
@@ -63,15 +52,10 @@ contract TokenFactory is RoleObserver {
             artistAddress
         );
 
-        //console.log("ERC721Generator deployed at: ", address(nftGenerator));
-
-        //link erc20 to original nft
-        sharesGenerator.linkNFT(address(nftGenerator));
-
-        sharesGenerator.mint(msg.sender, sharesAmount);
-
-        emit sharesCreated(address(sharesGenerator));
-
-        return (address(sharesGenerator));
+        sharesGenerator.mint(
+            msg.sender,
+            sharesAmount * 10**18,
+            address(nftGenerator)
+        );
     }
 }

@@ -11,60 +11,8 @@ import type {
 
 const _abi = [
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "Paused",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "Unpaused",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "newRoleManagerAddress",
-        type: "address",
-      },
-    ],
-    name: "newRoleManagerSet",
-    type: "event",
-  },
-  {
     inputs: [],
     name: "ACTIVE",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "ADMIN",
     outputs: [
       {
         internalType: "bytes32",
@@ -128,26 +76,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "pause",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "paused",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "bytes32[]",
@@ -156,13 +84,6 @@ const _abi = [
       },
     ],
     name: "setRoles",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "unpause",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

@@ -8,6 +8,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -22,13 +23,15 @@ import type {
   PromiseOrValue,
 } from "../common";
 
-export interface RoleObserverInterface extends utils.Interface {
+export interface RoyaltiesManagerInterface extends utils.Interface {
   functions: {
     "ACTIVE()": FunctionFragment;
     "SUSPENDED()": FunctionFragment;
     "addNewRoleManager(address)": FunctionFragment;
     "addRole(string)": FunctionFragment;
     "deleteRole(string)": FunctionFragment;
+    "distributeRoyalties(address,address[])": FunctionFragment;
+    "initialize()": FunctionFragment;
     "setRoles(bytes32[])": FunctionFragment;
   };
 
@@ -39,6 +42,8 @@ export interface RoleObserverInterface extends utils.Interface {
       | "addNewRoleManager"
       | "addRole"
       | "deleteRole"
+      | "distributeRoyalties"
+      | "initialize"
       | "setRoles"
   ): FunctionFragment;
 
@@ -57,6 +62,14 @@ export interface RoleObserverInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "distributeRoyalties",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "setRoles",
     values: [PromiseOrValue<BytesLike>[]]
   ): string;
@@ -69,17 +82,22 @@ export interface RoleObserverInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "addRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deleteRole", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "distributeRoyalties",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setRoles", data: BytesLike): Result;
 
   events: {};
 }
 
-export interface RoleObserver extends BaseContract {
+export interface RoyaltiesManager extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: RoleObserverInterface;
+  interface: RoyaltiesManagerInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -120,6 +138,16 @@ export interface RoleObserver extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    distributeRoyalties(
+      sharesContractAddress: PromiseOrValue<string>,
+      owners: PromiseOrValue<string>[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    initialize(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -142,6 +170,16 @@ export interface RoleObserver extends BaseContract {
 
   deleteRole(
     roleName: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  distributeRoyalties(
+    sharesContractAddress: PromiseOrValue<string>,
+    owners: PromiseOrValue<string>[],
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  initialize(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -169,6 +207,14 @@ export interface RoleObserver extends BaseContract {
       roleName: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    distributeRoyalties(
+      sharesContractAddress: PromiseOrValue<string>,
+      owners: PromiseOrValue<string>[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    initialize(overrides?: CallOverrides): Promise<void>;
 
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
@@ -198,6 +244,16 @@ export interface RoleObserver extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    distributeRoyalties(
+      sharesContractAddress: PromiseOrValue<string>,
+      owners: PromiseOrValue<string>[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    initialize(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -221,6 +277,16 @@ export interface RoleObserver extends BaseContract {
 
     deleteRole(
       roleName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    distributeRoyalties(
+      sharesContractAddress: PromiseOrValue<string>,
+      owners: PromiseOrValue<string>[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

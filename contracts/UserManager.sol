@@ -74,7 +74,6 @@ contract UserManager is RoleObserver, AccessControlEnumerable {
      */
     function addUser(address newAddress, string[] memory roleNames)
         external
-        whenNotPaused
         onlyAdmin
     {
         require(
@@ -242,7 +241,7 @@ contract UserManager is RoleObserver, AccessControlEnumerable {
         }
     }
 
-    function banUser(address userAddress) external whenNotPaused onlyAdmin {
+    function banUser(address userAddress) external onlyAdmin {
         require(
             roleManager.hasRole(ACTIVE, userAddress),
             "UserManager: User must be an active one."
@@ -254,7 +253,7 @@ contract UserManager is RoleObserver, AccessControlEnumerable {
         emit UserIsBanned(userAddress);
     }
 
-    function unbanUser(address userAddress) external whenNotPaused onlyAdmin {
+    function unbanUser(address userAddress) external onlyAdmin {
         require(
             roleManager.hasRole(SUSPENDED, userAddress),
             "UserManager: User is not banned."
