@@ -239,19 +239,36 @@ describe("RoleManager", function(){
     });
 
 
-    it("no one, not even an admin, can revoke ADMIN role", async function () {
+    it("no one, not even an admin, can revoke the Master Admin from ADMIN role", async function () {
 
 
 
         //reverts if consumer tries to revoke ADMIN role
         await expect(roleManager.connect(consumer).revokeRole(ethers.utils.solidityKeccak256(["string"], ["ADMIN"]), deployer.address)).to.be.revertedWith("RoleManager: Function is restricted to ADMIN and SYSTEM.");
 
-        //reverts if admin tries to revoke ADMIN role
-        await expect(roleManager.revokeRole(ethers.utils.solidityKeccak256(["string"], ["ADMIN"]), deployer.address)).to.be.revertedWith("RoleManager: you cannot revoke ADMIN role");
+        //reverts if admin tries to revoke Master Admin (deployer) from ADMIN role
+        await expect(roleManager.revokeRole(ethers.utils.solidityKeccak256(["string"], ["ADMIN"]), deployer.address)).to.be.revertedWith("RoleManager: you cannot eliminate the Master Admin from his role");
 
-        //reverts if system tries to revoke ADMIN role
+        //reverts if system tries to revoke Master Admin (deployer) from ADMIN role
         await roleManager.grantRole(ethers.utils.solidityKeccak256(["string"], ["SYSTEM"]), system.address);
-        await expect(roleManager.connect(system).revokeRole(ethers.utils.solidityKeccak256(["string"], ["ADMIN"]), deployer.address)).to.be.revertedWith("RoleManager: you cannot revoke ADMIN role");
+        await expect(roleManager.connect(system).revokeRole(ethers.utils.solidityKeccak256(["string"], ["ADMIN"]), deployer.address)).to.be.revertedWith("RoleManager: you cannot eliminate the Master Admin from his role");
+
+        //grant to consumer ADMIN role
+        await roleManager.grantRole(ethers.utils.solidityKeccak256(["string"], ["ADMIN"]), consumer.address);
+        expect(await roleManager.isAdmin(consumer.address)).to.equal(true);
+
+
+        //it's ok if admin or system try to revoke a normal admin (not the Master/deployer) from ADMIN role
+        await roleManager.revokeRole(ethers.utils.solidityKeccak256(["string"], ["ADMIN"]), consumer.address);
+        expect(await roleManager.isAdmin(consumer.address)).to.equal(false);
+
+        await roleManager.grantRole(ethers.utils.solidityKeccak256(["string"], ["ADMIN"]), consumer.address);
+        expect(await roleManager.isAdmin(consumer.address)).to.equal(true);
+
+
+        await roleManager.connect(system).revokeRole(ethers.utils.solidityKeccak256(["string"], ["ADMIN"]), consumer.address);
+        expect(await roleManager.isAdmin(consumer.address)).to.equal(false);
+
     });
     
     

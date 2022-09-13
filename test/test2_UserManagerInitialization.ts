@@ -54,9 +54,9 @@ describe("UserManager Initialization", function(){
     it("UserManager cannot initialize itself twice or initialize with a different deployer", async function() {
         
 
-        await expect(userManager.connect(consumer).initialize()).to.be.revertedWith("RoleObserver: Function is restricted to contract's deployer.");
+        await expect(userManager.connect(consumer).initialize()).to.be.revertedWithoutReason;
         await userManager.initialize();
-        await expect(userManager.initialize()).to.be.revertedWith("RoleObserver: Function cannot be called more than once.");
+        await expect(userManager.initialize()).to.be.revertedWithoutReason;
 
     })
     

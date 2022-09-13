@@ -52,9 +52,8 @@ describe("RoyaltiesManager tests", function(){
         await tokenFactory.deployed();
 
         console.log("TokenFactory deployed at:", tokenFactory.address);
-        await tokenFactory.initialize();
         console.log("msg.sender:", deployer.address);
-        await tokenFactory.connect(deployer).mintShares("NFTName", "NFTSymbol", "NFTDescription", "NFTUri", "SharesName", "SharesSymbol", 1000, 10, "0x0000000000000000000000000000000000000000");
+        await tokenFactory.connect(deployer).mintShares("NFTName", "NFTSymbol", "NFTDescription", "NFTUri", 1000, 10, "0x0000000000000000000000000000000000000000");
         
     })
 });

@@ -210,19 +210,19 @@ export interface UserManagerInterface extends utils.Interface {
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
-    "UserIsActivated(address)": EventFragment;
-    "UserIsBanned(address)": EventFragment;
-    "UserIsRegistered(address,string[])": EventFragment;
-    "UserIsUnbanned(address)": EventFragment;
+    "UserActivated(address)": EventFragment;
+    "UserBanned(address)": EventFragment;
+    "UserRegistered(address,string[])": EventFragment;
+    "UserUnbanned(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UserIsActivated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UserIsBanned"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UserIsRegistered"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UserIsUnbanned"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UserActivated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UserBanned"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UserRegistered"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UserUnbanned"): EventFragment;
 }
 
 export interface RoleAdminChangedEventObject {
@@ -262,44 +262,37 @@ export type RoleRevokedEvent = TypedEvent<
 
 export type RoleRevokedEventFilter = TypedEventFilter<RoleRevokedEvent>;
 
-export interface UserIsActivatedEventObject {
+export interface UserActivatedEventObject {
   user: string;
 }
-export type UserIsActivatedEvent = TypedEvent<
-  [string],
-  UserIsActivatedEventObject
->;
+export type UserActivatedEvent = TypedEvent<[string], UserActivatedEventObject>;
 
-export type UserIsActivatedEventFilter = TypedEventFilter<UserIsActivatedEvent>;
+export type UserActivatedEventFilter = TypedEventFilter<UserActivatedEvent>;
 
-export interface UserIsBannedEventObject {
+export interface UserBannedEventObject {
   user: string;
 }
-export type UserIsBannedEvent = TypedEvent<[string], UserIsBannedEventObject>;
+export type UserBannedEvent = TypedEvent<[string], UserBannedEventObject>;
 
-export type UserIsBannedEventFilter = TypedEventFilter<UserIsBannedEvent>;
+export type UserBannedEventFilter = TypedEventFilter<UserBannedEvent>;
 
-export interface UserIsRegisteredEventObject {
+export interface UserRegisteredEventObject {
   newUser: string;
   userRole: string[];
 }
-export type UserIsRegisteredEvent = TypedEvent<
+export type UserRegisteredEvent = TypedEvent<
   [string, string[]],
-  UserIsRegisteredEventObject
+  UserRegisteredEventObject
 >;
 
-export type UserIsRegisteredEventFilter =
-  TypedEventFilter<UserIsRegisteredEvent>;
+export type UserRegisteredEventFilter = TypedEventFilter<UserRegisteredEvent>;
 
-export interface UserIsUnbannedEventObject {
+export interface UserUnbannedEventObject {
   user: string;
 }
-export type UserIsUnbannedEvent = TypedEvent<
-  [string],
-  UserIsUnbannedEventObject
->;
+export type UserUnbannedEvent = TypedEvent<[string], UserUnbannedEventObject>;
 
-export type UserIsUnbannedEventFilter = TypedEventFilter<UserIsUnbannedEvent>;
+export type UserUnbannedEventFilter = TypedEventFilter<UserUnbannedEvent>;
 
 export interface UserManager extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -684,33 +677,31 @@ export interface UserManager extends BaseContract {
       sender?: PromiseOrValue<string> | null
     ): RoleRevokedEventFilter;
 
-    "UserIsActivated(address)"(
+    "UserActivated(address)"(
       user?: PromiseOrValue<string> | null
-    ): UserIsActivatedEventFilter;
-    UserIsActivated(
+    ): UserActivatedEventFilter;
+    UserActivated(
       user?: PromiseOrValue<string> | null
-    ): UserIsActivatedEventFilter;
+    ): UserActivatedEventFilter;
 
-    "UserIsBanned(address)"(
+    "UserBanned(address)"(
       user?: PromiseOrValue<string> | null
-    ): UserIsBannedEventFilter;
-    UserIsBanned(user?: PromiseOrValue<string> | null): UserIsBannedEventFilter;
+    ): UserBannedEventFilter;
+    UserBanned(user?: PromiseOrValue<string> | null): UserBannedEventFilter;
 
-    "UserIsRegistered(address,string[])"(
+    "UserRegistered(address,string[])"(
       newUser?: PromiseOrValue<string> | null,
       userRole?: null
-    ): UserIsRegisteredEventFilter;
-    UserIsRegistered(
+    ): UserRegisteredEventFilter;
+    UserRegistered(
       newUser?: PromiseOrValue<string> | null,
       userRole?: null
-    ): UserIsRegisteredEventFilter;
+    ): UserRegisteredEventFilter;
 
-    "UserIsUnbanned(address)"(
+    "UserUnbanned(address)"(
       user?: PromiseOrValue<string> | null
-    ): UserIsUnbannedEventFilter;
-    UserIsUnbanned(
-      user?: PromiseOrValue<string> | null
-    ): UserIsUnbannedEventFilter;
+    ): UserUnbannedEventFilter;
+    UserUnbanned(user?: PromiseOrValue<string> | null): UserUnbannedEventFilter;
   };
 
   estimateGas: {

@@ -28,10 +28,11 @@ describe("ERC721Generator Tests", function(){
         expect(await erc721Generator.balanceOf(sharesAddress.address)).to.equal(1);
         expect(await erc721Generator.name()).to.equal("NFTProva");
         expect(await erc721Generator.symbol()).to.equal("PRV");
+        /*
         expect(await erc721Generator.getDescription()).to.equal("Descrizione");
         expect(await erc721Generator.getURI()).to.equal("www.sito.com");
-        expect(await erc721Generator.getLinkedERC20Contract()).to.equal(sharesAddress.address);
         expect(await erc721Generator.getArtist()).to.equal(artist.address);
+        */
 
 
 

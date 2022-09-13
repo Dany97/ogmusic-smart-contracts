@@ -209,16 +209,16 @@ export interface RoleManagerInterface extends utils.Interface {
 
   events: {
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
+    "RoleCreated(string)": EventFragment;
+    "RoleDeleted(string)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
-    "RoleIsCreated(string)": EventFragment;
-    "RoleIsDeleted(string)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoleCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoleDeleted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleIsCreated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleIsDeleted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
 }
 
@@ -235,6 +235,20 @@ export type RoleAdminChangedEvent = TypedEvent<
 export type RoleAdminChangedEventFilter =
   TypedEventFilter<RoleAdminChangedEvent>;
 
+export interface RoleCreatedEventObject {
+  role: string;
+}
+export type RoleCreatedEvent = TypedEvent<[string], RoleCreatedEventObject>;
+
+export type RoleCreatedEventFilter = TypedEventFilter<RoleCreatedEvent>;
+
+export interface RoleDeletedEventObject {
+  role: string;
+}
+export type RoleDeletedEvent = TypedEvent<[string], RoleDeletedEventObject>;
+
+export type RoleDeletedEventFilter = TypedEventFilter<RoleDeletedEvent>;
+
 export interface RoleGrantedEventObject {
   role: string;
   account: string;
@@ -246,20 +260,6 @@ export type RoleGrantedEvent = TypedEvent<
 >;
 
 export type RoleGrantedEventFilter = TypedEventFilter<RoleGrantedEvent>;
-
-export interface RoleIsCreatedEventObject {
-  role: string;
-}
-export type RoleIsCreatedEvent = TypedEvent<[string], RoleIsCreatedEventObject>;
-
-export type RoleIsCreatedEventFilter = TypedEventFilter<RoleIsCreatedEvent>;
-
-export interface RoleIsDeletedEventObject {
-  role: string;
-}
-export type RoleIsDeletedEvent = TypedEvent<[string], RoleIsDeletedEventObject>;
-
-export type RoleIsDeletedEventFilter = TypedEventFilter<RoleIsDeletedEvent>;
 
 export interface RoleRevokedEventObject {
   role: string;
@@ -612,6 +612,12 @@ export interface RoleManager extends BaseContract {
       newAdminRole?: PromiseOrValue<BytesLike> | null
     ): RoleAdminChangedEventFilter;
 
+    "RoleCreated(string)"(role?: null): RoleCreatedEventFilter;
+    RoleCreated(role?: null): RoleCreatedEventFilter;
+
+    "RoleDeleted(string)"(role?: null): RoleDeletedEventFilter;
+    RoleDeleted(role?: null): RoleDeletedEventFilter;
+
     "RoleGranted(bytes32,address,address)"(
       role?: PromiseOrValue<BytesLike> | null,
       account?: PromiseOrValue<string> | null,
@@ -622,12 +628,6 @@ export interface RoleManager extends BaseContract {
       account?: PromiseOrValue<string> | null,
       sender?: PromiseOrValue<string> | null
     ): RoleGrantedEventFilter;
-
-    "RoleIsCreated(string)"(role?: null): RoleIsCreatedEventFilter;
-    RoleIsCreated(role?: null): RoleIsCreatedEventFilter;
-
-    "RoleIsDeleted(string)"(role?: null): RoleIsDeletedEventFilter;
-    RoleIsDeleted(role?: null): RoleIsDeletedEventFilter;
 
     "RoleRevoked(bytes32,address,address)"(
       role?: PromiseOrValue<BytesLike> | null,

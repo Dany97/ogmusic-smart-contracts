@@ -7,7 +7,7 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract ERC20SharesGenerator is ERC20, IERC721Receiver {
     uint256 public _price;
     bool private deposited = false;
-    address private _linkedNFT;
+    address public _linkedNFT;
     address public _owner;
 
     modifier onlyIfTokenDeposited() {

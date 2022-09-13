@@ -6,7 +6,6 @@ import {RoleManager} from "./RoleManager.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "./RoleObserver.sol";
-import "hardhat/console.sol";
 
 contract UserManager is RoleObserver, AccessControlEnumerable {
     struct UserData {
@@ -26,10 +25,10 @@ contract UserManager is RoleObserver, AccessControlEnumerable {
     string[] toRevoke;
     string[] finalRoles;
 
-    event UserIsRegistered(address indexed newUser, string[] userRole);
-    event UserIsActivated(address indexed user);
-    event UserIsBanned(address indexed user);
-    event UserIsUnbanned(address indexed user);
+    event UserRegistered(address indexed newUser, string[] userRole);
+    event UserActivated(address indexed user);
+    event UserBanned(address indexed user);
+    event UserUnbanned(address indexed user);
 
     constructor(address initialRoleManagerAddress) {
         require(
@@ -129,10 +128,10 @@ contract UserManager is RoleObserver, AccessControlEnumerable {
             registry[newAddress].roles.push(roleNames[i]);
             registry[newAddress].activityStatus = "ACTIVE";
 
-            emit UserIsRegistered(newAddress, roleNames);
+            emit UserRegistered(newAddress, roleNames);
         }
 
-        emit UserIsActivated(newAddress);
+        emit UserActivated(newAddress);
 
         return;
     }
@@ -250,7 +249,7 @@ contract UserManager is RoleObserver, AccessControlEnumerable {
         roleManager.grantRole(SUSPENDED, userAddress);
         registry[userAddress].activityStatus = "SUSPENDED";
 
-        emit UserIsBanned(userAddress);
+        emit UserBanned(userAddress);
     }
 
     function unbanUser(address userAddress) external onlyAdmin {
@@ -262,7 +261,7 @@ contract UserManager is RoleObserver, AccessControlEnumerable {
         roleManager.grantRole(ACTIVE, userAddress);
         registry[userAddress].activityStatus = "ACTIVE";
 
-        emit UserIsUnbanned(userAddress);
+        emit UserUnbanned(userAddress);
     }
 
     /*

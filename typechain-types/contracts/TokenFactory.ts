@@ -25,46 +25,11 @@ import type {
 
 export interface TokenFactoryInterface extends utils.Interface {
   functions: {
-    "ACTIVE()": FunctionFragment;
-    "SUSPENDED()": FunctionFragment;
-    "addNewRoleManager(address)": FunctionFragment;
-    "addRole(string)": FunctionFragment;
-    "deleteRole(string)": FunctionFragment;
-    "initialize()": FunctionFragment;
     "mintShares(string,string,string,string,uint256,uint256,address)": FunctionFragment;
-    "setRoles(bytes32[])": FunctionFragment;
   };
 
-  getFunction(
-    nameOrSignatureOrTopic:
-      | "ACTIVE"
-      | "SUSPENDED"
-      | "addNewRoleManager"
-      | "addRole"
-      | "deleteRole"
-      | "initialize"
-      | "mintShares"
-      | "setRoles"
-  ): FunctionFragment;
+  getFunction(nameOrSignatureOrTopic: "mintShares"): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "ACTIVE", values?: undefined): string;
-  encodeFunctionData(functionFragment: "SUSPENDED", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "addNewRoleManager",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addRole",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "deleteRole",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "initialize",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "mintShares",
     values: [
@@ -77,22 +42,8 @@ export interface TokenFactoryInterface extends utils.Interface {
       PromiseOrValue<string>
     ]
   ): string;
-  encodeFunctionData(
-    functionFragment: "setRoles",
-    values: [PromiseOrValue<BytesLike>[]]
-  ): string;
 
-  decodeFunctionResult(functionFragment: "ACTIVE", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "SUSPENDED", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "addNewRoleManager",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "addRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "deleteRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintShares", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "setRoles", data: BytesLike): Result;
 
   events: {};
 }
@@ -124,29 +75,6 @@ export interface TokenFactory extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    ACTIVE(overrides?: CallOverrides): Promise<[string]>;
-
-    SUSPENDED(overrides?: CallOverrides): Promise<[string]>;
-
-    addNewRoleManager(
-      newRoleManagerAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    addRole(
-      roleName: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    deleteRole(
-      roleName: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    initialize(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     mintShares(
       NFTName: PromiseOrValue<string>,
       NFTSymbol: PromiseOrValue<string>,
@@ -157,35 +85,7 @@ export interface TokenFactory extends BaseContract {
       artistAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    setRoles(
-      allAccountRoles: PromiseOrValue<BytesLike>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
   };
-
-  ACTIVE(overrides?: CallOverrides): Promise<string>;
-
-  SUSPENDED(overrides?: CallOverrides): Promise<string>;
-
-  addNewRoleManager(
-    newRoleManagerAddress: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  addRole(
-    roleName: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  deleteRole(
-    roleName: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  initialize(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
 
   mintShares(
     NFTName: PromiseOrValue<string>,
@@ -198,33 +98,7 @@ export interface TokenFactory extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  setRoles(
-    allAccountRoles: PromiseOrValue<BytesLike>[],
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   callStatic: {
-    ACTIVE(overrides?: CallOverrides): Promise<string>;
-
-    SUSPENDED(overrides?: CallOverrides): Promise<string>;
-
-    addNewRoleManager(
-      newRoleManagerAddress: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    addRole(
-      roleName: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    deleteRole(
-      roleName: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    initialize(overrides?: CallOverrides): Promise<void>;
-
     mintShares(
       NFTName: PromiseOrValue<string>,
       NFTSymbol: PromiseOrValue<string>,
@@ -233,11 +107,6 @@ export interface TokenFactory extends BaseContract {
       sharesAmount: PromiseOrValue<BigNumberish>,
       sharesPrice: PromiseOrValue<BigNumberish>,
       artistAddress: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setRoles(
-      allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -245,29 +114,6 @@ export interface TokenFactory extends BaseContract {
   filters: {};
 
   estimateGas: {
-    ACTIVE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    SUSPENDED(overrides?: CallOverrides): Promise<BigNumber>;
-
-    addNewRoleManager(
-      newRoleManagerAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    addRole(
-      roleName: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    deleteRole(
-      roleName: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    initialize(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     mintShares(
       NFTName: PromiseOrValue<string>,
       NFTSymbol: PromiseOrValue<string>,
@@ -276,39 +122,11 @@ export interface TokenFactory extends BaseContract {
       sharesAmount: PromiseOrValue<BigNumberish>,
       sharesPrice: PromiseOrValue<BigNumberish>,
       artistAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    setRoles(
-      allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    ACTIVE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    SUSPENDED(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    addNewRoleManager(
-      newRoleManagerAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    addRole(
-      roleName: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    deleteRole(
-      roleName: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    initialize(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     mintShares(
       NFTName: PromiseOrValue<string>,
       NFTSymbol: PromiseOrValue<string>,
@@ -317,11 +135,6 @@ export interface TokenFactory extends BaseContract {
       sharesAmount: PromiseOrValue<BigNumberish>,
       sharesPrice: PromiseOrValue<BigNumberish>,
       artistAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setRoles(
-      allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

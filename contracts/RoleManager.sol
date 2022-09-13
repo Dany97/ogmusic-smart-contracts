@@ -22,8 +22,10 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
 
     address[] private _observers;
 
-    event RoleIsCreated(string role);
-    event RoleIsDeleted(string role);
+    address private masterAdmin;
+
+    event RoleCreated(string role);
+    event RoleDeleted(string role);
 
     constructor(address metaTxAddress)
         PablockMetaTxReceiver("RoleManager", "0.0.1")
@@ -41,6 +43,8 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
         _setupRole(ADMIN, msg.sender);
         grantRole(ACTIVE, msg.sender);
         _grantRole(ADMIN, msg.sender);
+
+        masterAdmin = msg.sender;
 
         _grantRole(SYSTEM, address(this));
     }
@@ -138,7 +142,7 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
         for (uint256 i = 0; i < _observers.length; i++)
             RoleObserver(_observers[i]).addRole(name);
 
-        emit RoleIsCreated(name);
+        emit RoleCreated(name);
     }
 
     //@dev method for the admin useful to delete an existing role
@@ -157,7 +161,7 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
                 for (uint256 j = 0; j < _observers.length; j++)
                     UserManager(_observers[j]).deleteRole(name);
 
-                emit RoleIsDeleted(name);
+                emit RoleDeleted(name);
                 return;
             }
         }
@@ -189,7 +193,12 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
         override
         onlyAdminAndSystem
     {
-        require(role != ADMIN, "RoleManager: you cannot revoke ADMIN role");
+        if (role == ADMIN) {
+            require(
+                account != masterAdmin,
+                "RoleManager: you cannot eliminate the Master Admin from his role"
+            );
+        }
         _revokeRole(role, account);
     }
 

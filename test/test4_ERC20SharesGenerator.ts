@@ -16,14 +16,14 @@ describe("ERC20 shares generator Tests", function(){
         const ERC20SharesGenerator = await ethers.getContractFactory("ERC20SharesGenerator");
 
         //deploy with pablock address for mumbai network
-        const erc20SharesGenerator = await ERC20SharesGenerator.deploy("PIPPO", "PIP", 100, 10); 
+        const erc20SharesGenerator = await ERC20SharesGenerator.deploy("PIPPO", "PIP", 100); 
 
         await erc20SharesGenerator.deployed();
 
         console.log("ERC20SharesGenerator deployed at:", erc20SharesGenerator.address);
 
         //reverts if token is not sent to the contract
-        await expect(erc20SharesGenerator.connect(consumer).mint(deployer.address, 50)).to.be.revertedWith("Token not deposited");
+        await expect(erc20SharesGenerator.connect(consumer).mint(deployer.address, 50, consumer.address)).to.be.revertedWithoutReason;
 
         
         const ERC721Generator = await ethers.getContractFactory("ERC721Generator");
@@ -38,16 +38,13 @@ describe("ERC20 shares generator Tests", function(){
         
 
         //mints 50 ERC-20 to deployer
-        await erc20SharesGenerator.mint(deployer.address, 50);
+        await erc20SharesGenerator.mint(deployer.address, 50, erc721Generator.address);
         
 
         expect(await erc20SharesGenerator.balanceOf(deployer.address)).to.equal(50);
         expect(await erc20SharesGenerator.name()).to.equal("PIPPO");
         expect(await erc20SharesGenerator.symbol()).to.equal("PIP");
-
-        await erc20SharesGenerator.linkNFT(erc721Generator.address);
-        expect(await erc20SharesGenerator.getLinkedNFT()).to.equal(erc721Generator.address);
-        expect(await erc20SharesGenerator.getPrice()).to.equal(100);
+        expect(await erc20SharesGenerator._price()).to.equal(100);
 
 
 

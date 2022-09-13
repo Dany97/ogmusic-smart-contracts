@@ -43,7 +43,6 @@ async function main() {
         console.log("TokenFactory deployed at:", tokenFactory.address);
 
 
-        await tokenFactory.initialize();
 
         //token shop
 

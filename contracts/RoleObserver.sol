@@ -30,8 +30,7 @@ abstract contract RoleObserver {
     }
 
     modifier onlyOnce() {
-        if (deployer != address(0)) require(msg.sender == deployer);
-        else revert();
+        require(msg.sender == deployer);
         _;
     }
 

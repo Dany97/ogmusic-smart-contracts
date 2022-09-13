@@ -35,21 +35,13 @@ describe("Token Factory tests", function(){
 
         console.log("TokenFactory deployed at:", tokenFactory.address);
 
-        //reverts if initialize is called by someone different by the deployer
-        await expect(tokenFactory.connect(consumer).initialize()).to.be.revertedWithoutReason;
-
-
-        await tokenFactory.initialize();
-
-        //reverts if initialize is called more than once
-        await expect(tokenFactory.initialize()).to.be.revertedWithoutReason;
 
         //test for minting of NFT and shares
         console.log("msg.sender:", deployer.address);
-        await tokenFactory.connect(deployer).mintShares("NFTName", "NFTSymbol", "NFTDescription", "NFTUri", "SharesName", "SharesSymbol", 1000, 10, "0x0000000000000000000000000000000000000000");
+        await tokenFactory.connect(deployer).mintShares("NFTName", "NFTSymbol", "NFTDescription", "NFTUri", 1000, 10, "0x0000000000000000000000000000000000000000");
         
         //reverts if deployer isn't the admin
-        await expect(tokenFactory.connect(consumer).mintShares("NFTName", "NFTSymbol", "NFTDescription", "NFTUri", "SharesName", "SharesSymbol", 1000, 10, "0x0000000000000000000000000000000000000000")).to.be.revertedWithoutReason;
+        await expect(tokenFactory.connect(consumer).mintShares("NFTName", "NFTSymbol", "NFTDescription", "NFTUri", 1000, 10, "0x0000000000000000000000000000000000000000")).to.be.revertedWithoutReason;
     
         
 
