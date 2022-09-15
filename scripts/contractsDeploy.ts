@@ -36,7 +36,7 @@ async function main() {
 
         const TokenFactory = await ethers.getContractFactory("TokenFactory");
 
-        const tokenFactory = await TokenFactory.deploy(roleManager.address); 
+        const tokenFactory = await TokenFactory.deploy(roleManager.address, "0x4419AF074BC3a6C7D90f242dfdC1a163Bc710091"); 
 
         await tokenFactory.deployed();
 
@@ -48,7 +48,7 @@ async function main() {
 
         const TokenShop = await ethers.getContractFactory("TokenShop");
 
-        const tokenShop = await TokenShop.deploy(); 
+        const tokenShop = await TokenShop.deploy("0x4419AF074BC3a6C7D90f242dfdC1a163Bc710091"); 
 
         await tokenShop.deployed();
 
@@ -59,7 +59,7 @@ async function main() {
 
         const RoyaltiesManager = await ethers.getContractFactory("RoyaltiesManager");
 
-        const royaltiesManager = await RoyaltiesManager.deploy(roleManager.address); 
+        const royaltiesManager = await RoyaltiesManager.deploy(roleManager.address, "0x4419AF074BC3a6C7D90f242dfdC1a163Bc710091"); 
 
         await royaltiesManager.deployed();
 

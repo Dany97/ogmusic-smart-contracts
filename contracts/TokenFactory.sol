@@ -27,6 +27,8 @@ contract TokenFactory is PablockMetaTxReceiver {
         _;
     }
 
+    event sharesMinted(address indexed sharesAddress);
+
     function mintShares(
         string memory NFTName,
         string memory NFTSymbol,
@@ -59,9 +61,11 @@ contract TokenFactory is PablockMetaTxReceiver {
 
         sharesGenerator.mint(
             msg.sender,
-            sharesAmount * sharesGenerator.decimals(),
+            sharesAmount * (uint256(10))**sharesGenerator.decimals(),
             address(nftGenerator)
         );
+
+        emit sharesMinted(address(sharesGenerator));
     }
 
     // method to reset metatransaction in case of changes in the contract

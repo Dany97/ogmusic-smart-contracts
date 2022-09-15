@@ -13,7 +13,11 @@ import type {
   Signer,
   utils,
 } from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
@@ -72,8 +76,19 @@ export interface TokenFactoryInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
 
-  events: {};
+  events: {
+    "sharesMinted(address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "sharesMinted"): EventFragment;
 }
+
+export interface sharesMintedEventObject {
+  sharesAddress: string;
+}
+export type sharesMintedEvent = TypedEvent<[string], sharesMintedEventObject>;
+
+export type sharesMintedEventFilter = TypedEventFilter<sharesMintedEvent>;
 
 export interface TokenFactory extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -174,7 +189,10 @@ export interface TokenFactory extends BaseContract {
     version(overrides?: CallOverrides): Promise<string>;
   };
 
-  filters: {};
+  filters: {
+    "sharesMinted(address)"(sharesAddress?: null): sharesMintedEventFilter;
+    sharesMinted(sharesAddress?: null): sharesMintedEventFilter;
+  };
 
   estimateGas: {
     metaTxName(overrides?: CallOverrides): Promise<BigNumber>;
