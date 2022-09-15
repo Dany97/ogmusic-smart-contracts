@@ -3,10 +3,17 @@ pragma solidity ^0.8.9;
 
 import {ERC20SharesGenerator} from "./utils/ERC20SharesGenerator.sol";
 import "./RoleObserver.sol";
+import "pablock-smart-contracts/contracts/PablockMetaTxReceiver.sol";
 
-contract RoyaltiesManager is RoleObserver {
-    constructor(address initialRoleManagerAddress) {
+contract RoyaltiesManager is RoleObserver, PablockMetaTxReceiver {
+    constructor(address initialRoleManagerAddress, address metaTxAddress)
+        PablockMetaTxReceiver("RoyaltiesManager", "0.0.1")
+    {
         require(initialRoleManagerAddress != address(0));
+
+        //lets the contract enable notarizzazione.cloud metatransactions
+        setMetaTransaction(metaTxAddress);
+
         roleManagerAddress = initialRoleManagerAddress;
         roleManager = RoleManager(initialRoleManagerAddress);
         deployer = msg.sender;
@@ -66,5 +73,11 @@ contract RoyaltiesManager is RoleObserver {
 
             payable(address(owners[i])).transfer(amountToTransfer);
         }
+    }
+
+    // method to reset metatransaction in case of changes in the contract
+
+    function set_MetaTransaction(address metaTxAddress) public {
+        setMetaTransaction(metaTxAddress);
     }
 }

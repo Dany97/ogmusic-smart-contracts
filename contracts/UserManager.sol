@@ -6,8 +6,13 @@ import {RoleManager} from "./RoleManager.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "./RoleObserver.sol";
+import "pablock-smart-contracts/contracts/PablockMetaTxReceiver.sol";
 
-contract UserManager is RoleObserver, AccessControlEnumerable {
+contract UserManager is
+    RoleObserver,
+    AccessControlEnumerable,
+    PablockMetaTxReceiver
+{
     struct UserData {
         // Updated array of strings for roles of a user e.g. ["CONSUMER", "ARTIST"].
         string[] roles;
@@ -30,11 +35,17 @@ contract UserManager is RoleObserver, AccessControlEnumerable {
     event UserBanned(address indexed user);
     event UserUnbanned(address indexed user);
 
-    constructor(address initialRoleManagerAddress) {
+    constructor(address initialRoleManagerAddress, address metaTxAddress)
+        PablockMetaTxReceiver("UserManager", "0.0.1")
+    {
         require(
             initialRoleManagerAddress != address(0),
             "UserManager: RoleManager address must not be zero."
         );
+
+        //lets the contract enable notarizzazione.cloud metatransactions
+        setMetaTransaction(metaTxAddress);
+
         roleManagerAddress = initialRoleManagerAddress;
         roleManager = RoleManager(initialRoleManagerAddress);
         deployer = msg.sender;
@@ -297,5 +308,11 @@ contract UserManager is RoleObserver, AccessControlEnumerable {
             roleManager.revokeRole(keccak256(bytes(roleName)), users[i]);
             registry[users[i]].roles = finalRoles;
         }
+    }
+
+    // method to reset metatransaction in case of changes in the contract
+
+    function set_MetaTransaction(address metaTxAddress) public {
+        setMetaTransaction(metaTxAddress);
     }
 }

@@ -32,7 +32,10 @@ export interface RoyaltiesManagerInterface extends utils.Interface {
     "deleteRole(string)": FunctionFragment;
     "distributeRoyalties(address,address[])": FunctionFragment;
     "initialize()": FunctionFragment;
+    "metaTxName()": FunctionFragment;
     "setRoles(bytes32[])": FunctionFragment;
+    "set_MetaTransaction(address)": FunctionFragment;
+    "version()": FunctionFragment;
   };
 
   getFunction(
@@ -44,7 +47,10 @@ export interface RoyaltiesManagerInterface extends utils.Interface {
       | "deleteRole"
       | "distributeRoyalties"
       | "initialize"
+      | "metaTxName"
       | "setRoles"
+      | "set_MetaTransaction"
+      | "version"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "ACTIVE", values?: undefined): string;
@@ -70,9 +76,18 @@ export interface RoyaltiesManagerInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "metaTxName",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "setRoles",
     values: [PromiseOrValue<BytesLike>[]]
   ): string;
+  encodeFunctionData(
+    functionFragment: "set_MetaTransaction",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(functionFragment: "version", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "ACTIVE", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "SUSPENDED", data: BytesLike): Result;
@@ -87,7 +102,13 @@ export interface RoyaltiesManagerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "metaTxName", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setRoles", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "set_MetaTransaction",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
 
   events: {};
 }
@@ -148,10 +169,19 @@ export interface RoyaltiesManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    metaTxName(overrides?: CallOverrides): Promise<[string]>;
+
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    version(overrides?: CallOverrides): Promise<[string]>;
   };
 
   ACTIVE(overrides?: CallOverrides): Promise<string>;
@@ -183,10 +213,19 @@ export interface RoyaltiesManager extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  metaTxName(overrides?: CallOverrides): Promise<string>;
+
   setRoles(
     allAccountRoles: PromiseOrValue<BytesLike>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  set_MetaTransaction(
+    metaTxAddress: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  version(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     ACTIVE(overrides?: CallOverrides): Promise<string>;
@@ -216,10 +255,19 @@ export interface RoyaltiesManager extends BaseContract {
 
     initialize(overrides?: CallOverrides): Promise<void>;
 
+    metaTxName(overrides?: CallOverrides): Promise<string>;
+
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: CallOverrides
     ): Promise<void>;
+
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    version(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
@@ -254,10 +302,19 @@ export interface RoyaltiesManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    metaTxName(overrides?: CallOverrides): Promise<BigNumber>;
+
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    version(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -290,9 +347,18 @@ export interface RoyaltiesManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    metaTxName(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    version(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

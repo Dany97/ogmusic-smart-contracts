@@ -8,6 +8,7 @@ import type {
   BytesLike,
   CallOverrides,
   ContractTransaction,
+  Overrides,
   PayableOverrides,
   PopulatedTransaction,
   Signer,
@@ -25,17 +26,58 @@ import type {
 
 export interface TokenShopInterface extends utils.Interface {
   functions: {
-    "buyTokens(uint256,address)": FunctionFragment;
+    "buyTokensWithMatic(uint256,address)": FunctionFragment;
+    "buyTokensWithUSDT(uint256,address,address)": FunctionFragment;
+    "metaTxName()": FunctionFragment;
+    "set_MetaTransaction(address)": FunctionFragment;
+    "version()": FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "buyTokens"): FunctionFragment;
+  getFunction(
+    nameOrSignatureOrTopic:
+      | "buyTokensWithMatic"
+      | "buyTokensWithUSDT"
+      | "metaTxName"
+      | "set_MetaTransaction"
+      | "version"
+  ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "buyTokens",
+    functionFragment: "buyTokensWithMatic",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "buyTokensWithUSDT",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "metaTxName",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "set_MetaTransaction",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(functionFragment: "version", values?: undefined): string;
 
-  decodeFunctionResult(functionFragment: "buyTokens", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "buyTokensWithMatic",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "buyTokensWithUSDT",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "metaTxName", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "set_MetaTransaction",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
 
   events: {};
 }
@@ -67,42 +109,122 @@ export interface TokenShop extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    buyTokens(
+    buyTokensWithMatic(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    buyTokensWithUSDT(
+      amountToBuy: PromiseOrValue<BigNumberish>,
+      tokensAddress: PromiseOrValue<string>,
+      mumbaiUSDT: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    metaTxName(overrides?: CallOverrides): Promise<[string]>;
+
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    version(overrides?: CallOverrides): Promise<[string]>;
   };
 
-  buyTokens(
+  buyTokensWithMatic(
     amountToBuy: PromiseOrValue<BigNumberish>,
     tokensAddress: PromiseOrValue<string>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  buyTokensWithUSDT(
+    amountToBuy: PromiseOrValue<BigNumberish>,
+    tokensAddress: PromiseOrValue<string>,
+    mumbaiUSDT: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  metaTxName(overrides?: CallOverrides): Promise<string>;
+
+  set_MetaTransaction(
+    metaTxAddress: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  version(overrides?: CallOverrides): Promise<string>;
+
   callStatic: {
-    buyTokens(
+    buyTokensWithMatic(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    buyTokensWithUSDT(
+      amountToBuy: PromiseOrValue<BigNumberish>,
+      tokensAddress: PromiseOrValue<string>,
+      mumbaiUSDT: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    metaTxName(overrides?: CallOverrides): Promise<string>;
+
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    version(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
 
   estimateGas: {
-    buyTokens(
+    buyTokensWithMatic(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    buyTokensWithUSDT(
+      amountToBuy: PromiseOrValue<BigNumberish>,
+      tokensAddress: PromiseOrValue<string>,
+      mumbaiUSDT: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    metaTxName(overrides?: CallOverrides): Promise<BigNumber>;
+
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    version(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    buyTokens(
+    buyTokensWithMatic(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    buyTokensWithUSDT(
+      amountToBuy: PromiseOrValue<BigNumberish>,
+      tokensAddress: PromiseOrValue<string>,
+      mumbaiUSDT: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    metaTxName(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    version(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

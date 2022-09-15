@@ -269,6 +269,8 @@ describe("RoleManager", function(){
         await roleManager.connect(system).revokeRole(ethers.utils.solidityKeccak256(["string"], ["ADMIN"]), consumer.address);
         expect(await roleManager.isAdmin(consumer.address)).to.equal(false);
 
+
+        
     });
     
     
@@ -339,6 +341,8 @@ describe("RoleManager", function(){
 
 
     });
+
+    
     
     
 });

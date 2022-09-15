@@ -25,11 +25,24 @@ import type {
 
 export interface TokenFactoryInterface extends utils.Interface {
   functions: {
-    "mintShares(string,string,string,string,uint256,uint256,address)": FunctionFragment;
+    "metaTxName()": FunctionFragment;
+    "mintShares(string,string,string,string,uint256,uint256,uint256,uint256,uint256,address)": FunctionFragment;
+    "set_MetaTransaction(address)": FunctionFragment;
+    "version()": FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "mintShares"): FunctionFragment;
+  getFunction(
+    nameOrSignatureOrTopic:
+      | "metaTxName"
+      | "mintShares"
+      | "set_MetaTransaction"
+      | "version"
+  ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "metaTxName",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "mintShares",
     values: [
@@ -39,11 +52,25 @@ export interface TokenFactoryInterface extends utils.Interface {
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "set_MetaTransaction",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(functionFragment: "version", values?: undefined): string;
 
+  decodeFunctionResult(functionFragment: "metaTxName", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintShares", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "set_MetaTransaction",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
 
   events: {};
 }
@@ -75,17 +102,31 @@ export interface TokenFactory extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    metaTxName(overrides?: CallOverrides): Promise<[string]>;
+
     mintShares(
       NFTName: PromiseOrValue<string>,
       NFTSymbol: PromiseOrValue<string>,
       NFTDescription: PromiseOrValue<string>,
       NFTUri: PromiseOrValue<string>,
       sharesAmount: PromiseOrValue<BigNumberish>,
-      sharesPrice: PromiseOrValue<BigNumberish>,
+      sharesPriceMatic: PromiseOrValue<BigNumberish>,
+      sharesPriceWETH: PromiseOrValue<BigNumberish>,
+      sharesPriceUSDT: PromiseOrValue<BigNumberish>,
+      sharesPriceUSD: PromiseOrValue<BigNumberish>,
       artistAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    version(overrides?: CallOverrides): Promise<[string]>;
   };
+
+  metaTxName(overrides?: CallOverrides): Promise<string>;
 
   mintShares(
     NFTName: PromiseOrValue<string>,
@@ -93,49 +134,95 @@ export interface TokenFactory extends BaseContract {
     NFTDescription: PromiseOrValue<string>,
     NFTUri: PromiseOrValue<string>,
     sharesAmount: PromiseOrValue<BigNumberish>,
-    sharesPrice: PromiseOrValue<BigNumberish>,
+    sharesPriceMatic: PromiseOrValue<BigNumberish>,
+    sharesPriceWETH: PromiseOrValue<BigNumberish>,
+    sharesPriceUSDT: PromiseOrValue<BigNumberish>,
+    sharesPriceUSD: PromiseOrValue<BigNumberish>,
     artistAddress: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  set_MetaTransaction(
+    metaTxAddress: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  version(overrides?: CallOverrides): Promise<string>;
+
   callStatic: {
+    metaTxName(overrides?: CallOverrides): Promise<string>;
+
     mintShares(
       NFTName: PromiseOrValue<string>,
       NFTSymbol: PromiseOrValue<string>,
       NFTDescription: PromiseOrValue<string>,
       NFTUri: PromiseOrValue<string>,
       sharesAmount: PromiseOrValue<BigNumberish>,
-      sharesPrice: PromiseOrValue<BigNumberish>,
+      sharesPriceMatic: PromiseOrValue<BigNumberish>,
+      sharesPriceWETH: PromiseOrValue<BigNumberish>,
+      sharesPriceUSDT: PromiseOrValue<BigNumberish>,
+      sharesPriceUSD: PromiseOrValue<BigNumberish>,
       artistAddress: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    version(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
 
   estimateGas: {
+    metaTxName(overrides?: CallOverrides): Promise<BigNumber>;
+
     mintShares(
       NFTName: PromiseOrValue<string>,
       NFTSymbol: PromiseOrValue<string>,
       NFTDescription: PromiseOrValue<string>,
       NFTUri: PromiseOrValue<string>,
       sharesAmount: PromiseOrValue<BigNumberish>,
-      sharesPrice: PromiseOrValue<BigNumberish>,
+      sharesPriceMatic: PromiseOrValue<BigNumberish>,
+      sharesPriceWETH: PromiseOrValue<BigNumberish>,
+      sharesPriceUSDT: PromiseOrValue<BigNumberish>,
+      sharesPriceUSD: PromiseOrValue<BigNumberish>,
       artistAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    version(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    metaTxName(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     mintShares(
       NFTName: PromiseOrValue<string>,
       NFTSymbol: PromiseOrValue<string>,
       NFTDescription: PromiseOrValue<string>,
       NFTUri: PromiseOrValue<string>,
       sharesAmount: PromiseOrValue<BigNumberish>,
-      sharesPrice: PromiseOrValue<BigNumberish>,
+      sharesPriceMatic: PromiseOrValue<BigNumberish>,
+      sharesPriceWETH: PromiseOrValue<BigNumberish>,
+      sharesPriceUSDT: PromiseOrValue<BigNumberish>,
+      sharesPriceUSD: PromiseOrValue<BigNumberish>,
       artistAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    version(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

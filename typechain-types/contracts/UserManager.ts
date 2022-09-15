@@ -44,13 +44,16 @@ export interface UserManagerInterface extends utils.Interface {
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "initialize()": FunctionFragment;
+    "metaTxName()": FunctionFragment;
     "registry(address)": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "setRoles(bytes32[])": FunctionFragment;
+    "set_MetaTransaction(address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "unbanUser(address)": FunctionFragment;
     "updateUser(address,string[])": FunctionFragment;
+    "version()": FunctionFragment;
   };
 
   getFunction(
@@ -70,13 +73,16 @@ export interface UserManagerInterface extends utils.Interface {
       | "grantRole"
       | "hasRole"
       | "initialize"
+      | "metaTxName"
       | "registry"
       | "renounceRole"
       | "revokeRole"
       | "setRoles"
+      | "set_MetaTransaction"
       | "supportsInterface"
       | "unbanUser"
       | "updateUser"
+      | "version"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "ACTIVE", values?: undefined): string;
@@ -134,6 +140,10 @@ export interface UserManagerInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "metaTxName",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "registry",
     values: [PromiseOrValue<string>]
   ): string;
@@ -150,6 +160,10 @@ export interface UserManagerInterface extends utils.Interface {
     values: [PromiseOrValue<BytesLike>[]]
   ): string;
   encodeFunctionData(
+    functionFragment: "set_MetaTransaction",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
   ): string;
@@ -161,6 +175,7 @@ export interface UserManagerInterface extends utils.Interface {
     functionFragment: "updateUser",
     values: [PromiseOrValue<string>, PromiseOrValue<string>[]]
   ): string;
+  encodeFunctionData(functionFragment: "version", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "ACTIVE", data: BytesLike): Result;
   decodeFunctionResult(
@@ -192,6 +207,7 @@ export interface UserManagerInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "metaTxName", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceRole",
@@ -200,11 +216,16 @@ export interface UserManagerInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setRoles", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "set_MetaTransaction",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "unbanUser", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "updateUser", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
 
   events: {
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
@@ -390,6 +411,8 @@ export interface UserManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    metaTxName(overrides?: CallOverrides): Promise<[string]>;
+
     registry(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -412,6 +435,11 @@ export interface UserManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -427,6 +455,8 @@ export interface UserManager extends BaseContract {
       newRoles: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    version(overrides?: CallOverrides): Promise<[string]>;
   };
 
   ACTIVE(overrides?: CallOverrides): Promise<string>;
@@ -498,6 +528,8 @@ export interface UserManager extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  metaTxName(overrides?: CallOverrides): Promise<string>;
+
   registry(
     arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -520,6 +552,11 @@ export interface UserManager extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  set_MetaTransaction(
+    metaTxAddress: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   supportsInterface(
     interfaceId: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
@@ -535,6 +572,8 @@ export interface UserManager extends BaseContract {
     newRoles: PromiseOrValue<string>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  version(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     ACTIVE(overrides?: CallOverrides): Promise<string>;
@@ -604,6 +643,8 @@ export interface UserManager extends BaseContract {
 
     initialize(overrides?: CallOverrides): Promise<void>;
 
+    metaTxName(overrides?: CallOverrides): Promise<string>;
+
     registry(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -626,6 +667,11 @@ export interface UserManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -641,6 +687,8 @@ export interface UserManager extends BaseContract {
       newRoles: PromiseOrValue<string>[],
       overrides?: CallOverrides
     ): Promise<void>;
+
+    version(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -774,6 +822,8 @@ export interface UserManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    metaTxName(overrides?: CallOverrides): Promise<BigNumber>;
+
     registry(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -796,6 +846,11 @@ export interface UserManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -811,6 +866,8 @@ export interface UserManager extends BaseContract {
       newRoles: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    version(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -885,6 +942,8 @@ export interface UserManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    metaTxName(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     registry(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -907,6 +966,11 @@ export interface UserManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    set_MetaTransaction(
+      metaTxAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -922,5 +986,7 @@ export interface UserManager extends BaseContract {
       newRoles: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    version(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

@@ -31,7 +31,10 @@ export interface ERC20SharesGeneratorInterface extends utils.Interface {
   functions: {
     "_linkedNFT()": FunctionFragment;
     "_owner()": FunctionFragment;
-    "_price()": FunctionFragment;
+    "_priceMatic()": FunctionFragment;
+    "_priceUSD()": FunctionFragment;
+    "_priceUSDT()": FunctionFragment;
+    "_priceWETH()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
@@ -51,7 +54,10 @@ export interface ERC20SharesGeneratorInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "_linkedNFT"
       | "_owner"
-      | "_price"
+      | "_priceMatic"
+      | "_priceUSD"
+      | "_priceUSDT"
+      | "_priceWETH"
       | "allowance"
       | "approve"
       | "balanceOf"
@@ -72,7 +78,19 @@ export interface ERC20SharesGeneratorInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "_owner", values?: undefined): string;
-  encodeFunctionData(functionFragment: "_price", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "_priceMatic",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "_priceUSD", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "_priceUSDT",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "_priceWETH",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "allowance",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
@@ -132,7 +150,13 @@ export interface ERC20SharesGeneratorInterface extends utils.Interface {
 
   decodeFunctionResult(functionFragment: "_linkedNFT", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "_owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "_price", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "_priceMatic",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "_priceUSD", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "_priceUSDT", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "_priceWETH", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -226,7 +250,13 @@ export interface ERC20SharesGenerator extends BaseContract {
 
     _owner(overrides?: CallOverrides): Promise<[string]>;
 
-    _price(overrides?: CallOverrides): Promise<[BigNumber]>;
+    _priceMatic(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    _priceUSD(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    _priceUSDT(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    _priceWETH(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -298,7 +328,13 @@ export interface ERC20SharesGenerator extends BaseContract {
 
   _owner(overrides?: CallOverrides): Promise<string>;
 
-  _price(overrides?: CallOverrides): Promise<BigNumber>;
+  _priceMatic(overrides?: CallOverrides): Promise<BigNumber>;
+
+  _priceUSD(overrides?: CallOverrides): Promise<BigNumber>;
+
+  _priceUSDT(overrides?: CallOverrides): Promise<BigNumber>;
+
+  _priceWETH(overrides?: CallOverrides): Promise<BigNumber>;
 
   allowance(
     owner: PromiseOrValue<string>,
@@ -370,7 +406,13 @@ export interface ERC20SharesGenerator extends BaseContract {
 
     _owner(overrides?: CallOverrides): Promise<string>;
 
-    _price(overrides?: CallOverrides): Promise<BigNumber>;
+    _priceMatic(overrides?: CallOverrides): Promise<BigNumber>;
+
+    _priceUSD(overrides?: CallOverrides): Promise<BigNumber>;
+
+    _priceUSDT(overrides?: CallOverrides): Promise<BigNumber>;
+
+    _priceWETH(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -467,7 +509,13 @@ export interface ERC20SharesGenerator extends BaseContract {
 
     _owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    _price(overrides?: CallOverrides): Promise<BigNumber>;
+    _priceMatic(overrides?: CallOverrides): Promise<BigNumber>;
+
+    _priceUSD(overrides?: CallOverrides): Promise<BigNumber>;
+
+    _priceUSDT(overrides?: CallOverrides): Promise<BigNumber>;
+
+    _priceWETH(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -540,7 +588,13 @@ export interface ERC20SharesGenerator extends BaseContract {
 
     _owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    _price(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    _priceMatic(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    _priceUSD(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    _priceUSDT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    _priceWETH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     allowance(
       owner: PromiseOrValue<string>,
