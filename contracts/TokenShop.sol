@@ -1,85 +1,133 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-import {ERC20SharesGenerator} from "./utils/ERC20SharesGenerator.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {ERC1155Contract} from "./utils/ERC1155Contract.sol";
 import "pablock-smart-contracts/contracts/PablockMetaTxReceiver.sol";
+import {RoleManager} from "./RoleManager.sol";
 
 contract TokenShop is PablockMetaTxReceiver {
-    constructor(address metaTxAddress)
-        PablockMetaTxReceiver("TokenShop", "0.0.1")
+    RoleManager roleManager;
+    address roleManagerAddress;
+
+    constructor(address initialRoleManagerAddress, address metaTxAddress)
+        PablockMetaTxReceiver("TokenShop", "0.1.1")
     {
+        require(initialRoleManagerAddress != address(0));
+
         //lets the contract enable notarizzazione.cloud metatransactions
         setMetaTransaction(metaTxAddress);
+
+        roleManagerAddress = initialRoleManagerAddress;
+        roleManager = RoleManager(initialRoleManagerAddress);
     }
 
-    function buyTokensWithMatic(uint256 amountToBuy, address tokensAddress)
-        external
-        payable
-    {
-        ERC20SharesGenerator tokensContract = ERC20SharesGenerator(
-            tokensAddress
-        );
+    modifier onlyAdminNoMetaTx() {
+        require(roleManager.isAdmin(msg.sender));
+        _;
+    }
 
+    event tokensBought(address tokenAddress, uint256 tokenId, address buyer);
+
+    function buyTokensWithMatic(
+        uint256 amountToBuy,
+        address tokensAddress,
+        uint256 tokenId
+    ) external payable {
+        ERC1155Contract tokensContract = ERC1155Contract(tokensAddress);
+        uint256 price = tokensContract._priceUSDT(tokenId);
         //checks if the amount of matic sent equals the total price of the tokens
-        require(
-            msg.value == amountToBuy * tokensContract._priceMatic(),
-            "incorrect price"
-        );
-
-        //conversion wei to matic
-        uint256 scaledAmount = amountToBuy *
-            ((uint256(10))**tokensContract.decimals());
+        require(msg.value == amountToBuy * price, "incorrect price");
 
         //checks if there are unsold tokens
         require(
-            tokensContract.balanceOf(tokensContract._owner()) >= scaledAmount,
+            tokensContract.balanceOf(tokensContract._owner(), tokenId) >=
+                amountToBuy,
             "all the tokens have been sold"
         );
 
-        /*
-        Because the ERC20 token standard allows tokens to return false on failure, rather than reverting,
-        the final require is necessary to ensure the buyer actually receives their tokens
-        */
-        require(
-            tokensContract.transferFrom(
-                tokensContract._owner(),
-                msg.sender,
-                scaledAmount
-            )
+        //token transfer
+
+        tokensContract.safeTransferFrom(
+            tokensContract._owner(),
+            msgSender(),
+            tokenId,
+            amountToBuy,
+            ""
         );
 
         //finally, the contract sends the amount of Balance contained in msg.value to the
         //admin (owner of tokens contract)
         payable(address(tokensContract._owner())).transfer(msg.value);
+
+        emit tokensBought(tokensAddress, tokenId, msgSender());
     }
 
     function buyTokensWithUSDT(
         uint256 amountToBuy,
         address tokensAddress,
-        address mumbaiUSDT
+        uint256 tokenId
     ) external {
-        //usdtContractMumbaiAddress = 0x3813e82e6f7098b9583FC0F33a962D02018B6803;
+        address usdtContractAddress = 0x3813e82e6f7098b9583FC0F33a962D02018B6803; //MUMBAI
+
+        ERC1155Contract tokensContract = ERC1155Contract(tokensAddress);
+        uint256 price = tokensContract._priceUSDT(tokenId);
+
+        ERC20 usdtContract = ERC20(usdtContractAddress);
+
+        uint256 usdtToPay = amountToBuy *
+            price *
+            ((uint256(10))**usdtContract.decimals());
+
+        //checks if there are unsold tokens
+        require(
+            tokensContract.balanceOf(tokensContract._owner(), tokenId) >=
+                amountToBuy,
+            "all the tokens have been sold"
+        );
+
+        //the contract transfers USDT tokens from msgSender() to the admin
+
+        usdtContract.transferFrom(
+            msgSender(),
+            tokensContract._owner(),
+            usdtToPay
+        );
+
+        /*
+        tokens are transferred from owner to buyer (msgSender())
+        */
+
+        tokensContract.safeTransferFrom(
+            tokensContract._owner(),
+            msgSender(),
+            tokenId,
+            amountToBuy,
+            ""
+        );
+
+        emit tokensBought(tokensAddress, tokenId, msgSender());
+    }
+
+    /*
+    function buyTokensWithWETH(uint256 amountToBuy, address tokensAddress)
+        external
+    {
+        address wethContractAddress = 0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa; //MUMBAI
 
         ERC20SharesGenerator tokensContract = ERC20SharesGenerator(
             tokensAddress
         );
 
-        ERC20 usdtContractMumbai = ERC20(mumbaiUSDT);
+        ERC20 wethContract = ERC20(wethContractAddress);
 
-        uint256 usdtToPay = amountToBuy *
-            tokensContract._priceUSDT() *
-            ((uint256(10))**usdtContractMumbai.decimals());
+        uint256 wethToPay = amountToBuy *
+            tokensContract._priceWETH() *
+            ((uint256(10))**wethContract.decimals());
 
-        //conversion wei to matic
+        //conversion wei to token unit
         uint256 scaledAmount = amountToBuy *
             ((uint256(10))**tokensContract.decimals());
-
-        //checks if the buyer has the minimum amount of USDT to afford the total price of the tokens
-        require(
-            usdtContractMumbai.balanceOf(msg.sender) >= usdtToPay,
-            "not enough USDT balance"
-        );
 
         //checks if there are unsold tokens
         require(
@@ -87,33 +135,54 @@ contract TokenShop is PablockMetaTxReceiver {
             "all the tokens have been sold"
         );
 
-        //the contract transfers USDT tokens from msg.sender to the admin
+        //the contract transfers WETH tokens from msgSender() to the admin
 
-        require(
-            usdtContractMumbai.transferFrom(
-                msg.sender,
-                tokensContract._owner(),
-                usdtToPay
-            )
+        wethContract.transferFrom(
+            msgSender(),
+            tokensContract._owner(),
+            wethToPay
         );
+
+        
+        //tokens are transferred from owner to buyer (msgSender())
+        
+
+        tokensContract.transferFrom(
+            tokensContract._owner(),
+            msgSender(),
+            scaledAmount
+        );
+    }
+    */
+
+    function claimTokensAfterFiatPayment(
+        uint256 amountToClaim,
+        address tokensAddress,
+        uint256 tokenId
+    ) external {
+        ERC1155Contract tokensContract = ERC1155Contract(tokensAddress);
 
         /*
-        Because the ERC20 token standard allows tokens to return false on failure, rather than reverting,
-        the final require is necessary to ensure the buyer actually receives their tokens
+        token transfer
         */
 
-        require(
-            tokensContract.transferFrom(
-                tokensContract._owner(),
-                msg.sender,
-                scaledAmount
-            )
+        tokensContract.safeTransferFrom(
+            tokensContract._owner(),
+            msgSender(),
+            tokenId,
+            amountToClaim,
+            ""
         );
+
+        emit tokensBought(tokensAddress, tokenId, msgSender());
     }
 
     // method to reset metatransaction in case of changes in the contract
 
-    function set_MetaTransaction(address metaTxAddress) public {
+    function set_MetaTransaction(address metaTxAddress)
+        public
+        onlyAdminNoMetaTx
+    {
         setMetaTransaction(metaTxAddress);
     }
 }

@@ -14,7 +14,11 @@ import type {
   Signer,
   utils,
 } from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
@@ -26,8 +30,9 @@ import type {
 
 export interface TokenShopInterface extends utils.Interface {
   functions: {
-    "buyTokensWithMatic(uint256,address)": FunctionFragment;
-    "buyTokensWithUSDT(uint256,address,address)": FunctionFragment;
+    "buyTokensWithMatic(uint256,address,uint256)": FunctionFragment;
+    "buyTokensWithUSDT(uint256,address,uint256)": FunctionFragment;
+    "claimTokensAfterFiatPayment(uint256,address,uint256)": FunctionFragment;
     "metaTxName()": FunctionFragment;
     "set_MetaTransaction(address)": FunctionFragment;
     "version()": FunctionFragment;
@@ -37,6 +42,7 @@ export interface TokenShopInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "buyTokensWithMatic"
       | "buyTokensWithUSDT"
+      | "claimTokensAfterFiatPayment"
       | "metaTxName"
       | "set_MetaTransaction"
       | "version"
@@ -44,14 +50,26 @@ export interface TokenShopInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: "buyTokensWithMatic",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "buyTokensWithUSDT",
     values: [
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>,
-      PromiseOrValue<string>
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "claimTokensAfterFiatPayment",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>
     ]
   ): string;
   encodeFunctionData(
@@ -72,6 +90,10 @@ export interface TokenShopInterface extends utils.Interface {
     functionFragment: "buyTokensWithUSDT",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "claimTokensAfterFiatPayment",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "metaTxName", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "set_MetaTransaction",
@@ -79,8 +101,24 @@ export interface TokenShopInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
 
-  events: {};
+  events: {
+    "tokensBought(address,uint256,address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "tokensBought"): EventFragment;
 }
+
+export interface tokensBoughtEventObject {
+  tokenAddress: string;
+  tokenId: BigNumber;
+  buyer: string;
+}
+export type tokensBoughtEvent = TypedEvent<
+  [string, BigNumber, string],
+  tokensBoughtEventObject
+>;
+
+export type tokensBoughtEventFilter = TypedEventFilter<tokensBoughtEvent>;
 
 export interface TokenShop extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -112,13 +150,21 @@ export interface TokenShop extends BaseContract {
     buyTokensWithMatic(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     buyTokensWithUSDT(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
-      mumbaiUSDT: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    claimTokensAfterFiatPayment(
+      amountToClaim: PromiseOrValue<BigNumberish>,
+      tokensAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -135,13 +181,21 @@ export interface TokenShop extends BaseContract {
   buyTokensWithMatic(
     amountToBuy: PromiseOrValue<BigNumberish>,
     tokensAddress: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   buyTokensWithUSDT(
     amountToBuy: PromiseOrValue<BigNumberish>,
     tokensAddress: PromiseOrValue<string>,
-    mumbaiUSDT: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  claimTokensAfterFiatPayment(
+    amountToClaim: PromiseOrValue<BigNumberish>,
+    tokensAddress: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -158,13 +212,21 @@ export interface TokenShop extends BaseContract {
     buyTokensWithMatic(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     buyTokensWithUSDT(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
-      mumbaiUSDT: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    claimTokensAfterFiatPayment(
+      amountToClaim: PromiseOrValue<BigNumberish>,
+      tokensAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -178,19 +240,38 @@ export interface TokenShop extends BaseContract {
     version(overrides?: CallOverrides): Promise<string>;
   };
 
-  filters: {};
+  filters: {
+    "tokensBought(address,uint256,address)"(
+      tokenAddress?: null,
+      tokenId?: null,
+      buyer?: null
+    ): tokensBoughtEventFilter;
+    tokensBought(
+      tokenAddress?: null,
+      tokenId?: null,
+      buyer?: null
+    ): tokensBoughtEventFilter;
+  };
 
   estimateGas: {
     buyTokensWithMatic(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     buyTokensWithUSDT(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
-      mumbaiUSDT: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    claimTokensAfterFiatPayment(
+      amountToClaim: PromiseOrValue<BigNumberish>,
+      tokensAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -208,13 +289,21 @@ export interface TokenShop extends BaseContract {
     buyTokensWithMatic(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     buyTokensWithUSDT(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
-      mumbaiUSDT: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    claimTokensAfterFiatPayment(
+      amountToClaim: PromiseOrValue<BigNumberish>,
+      tokensAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

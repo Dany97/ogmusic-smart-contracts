@@ -29,20 +29,63 @@ import type {
 
 export interface TokenFactoryInterface extends utils.Interface {
   functions: {
+    "ACTIVE()": FunctionFragment;
+    "SUSPENDED()": FunctionFragment;
+    "addNewRoleManager(address)": FunctionFragment;
+    "addRole(string)": FunctionFragment;
+    "createCollection(string,string,string,string)": FunctionFragment;
+    "deleteRole(string)": FunctionFragment;
+    "initialize()": FunctionFragment;
     "metaTxName()": FunctionFragment;
-    "mintShares(string,string,string,string,uint256,uint256,uint256,uint256,uint256,address)": FunctionFragment;
+    "mintShares(address,uint256,string,string,uint256,string,string,string)": FunctionFragment;
+    "setRoles(bytes32[])": FunctionFragment;
     "set_MetaTransaction(address)": FunctionFragment;
     "version()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "ACTIVE"
+      | "SUSPENDED"
+      | "addNewRoleManager"
+      | "addRole"
+      | "createCollection"
+      | "deleteRole"
+      | "initialize"
       | "metaTxName"
       | "mintShares"
+      | "setRoles"
       | "set_MetaTransaction"
       | "version"
   ): FunctionFragment;
 
+  encodeFunctionData(functionFragment: "ACTIVE", values?: undefined): string;
+  encodeFunctionData(functionFragment: "SUSPENDED", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "addNewRoleManager",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addRole",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "createCollection",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "deleteRole",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "metaTxName",
     values?: undefined
@@ -51,16 +94,18 @@ export interface TokenFactoryInterface extends utils.Interface {
     functionFragment: "mintShares",
     values: [
       PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
       PromiseOrValue<string>
     ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setRoles",
+    values: [PromiseOrValue<BytesLike>[]]
   ): string;
   encodeFunctionData(
     functionFragment: "set_MetaTransaction",
@@ -68,8 +113,22 @@ export interface TokenFactoryInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "version", values?: undefined): string;
 
+  decodeFunctionResult(functionFragment: "ACTIVE", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "SUSPENDED", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "addNewRoleManager",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "addRole", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "createCollection",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "deleteRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "metaTxName", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintShares", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setRoles", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "set_MetaTransaction",
     data: BytesLike
@@ -77,11 +136,24 @@ export interface TokenFactoryInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
 
   events: {
+    "collectionCreated(address)": EventFragment;
     "sharesMinted(address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "collectionCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "sharesMinted"): EventFragment;
 }
+
+export interface collectionCreatedEventObject {
+  collectionAddress: string;
+}
+export type collectionCreatedEvent = TypedEvent<
+  [string],
+  collectionCreatedEventObject
+>;
+
+export type collectionCreatedEventFilter =
+  TypedEventFilter<collectionCreatedEvent>;
 
 export interface sharesMintedEventObject {
   sharesAddress: string;
@@ -117,19 +189,53 @@ export interface TokenFactory extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    ACTIVE(overrides?: CallOverrides): Promise<[string]>;
+
+    SUSPENDED(overrides?: CallOverrides): Promise<[string]>;
+
+    addNewRoleManager(
+      newRoleManagerAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    addRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    createCollection(
+      collectionUri: PromiseOrValue<string>,
+      collectionName: PromiseOrValue<string>,
+      collectionImageURL: PromiseOrValue<string>,
+      artistName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    deleteRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    initialize(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     metaTxName(overrides?: CallOverrides): Promise<[string]>;
 
     mintShares(
-      NFTName: PromiseOrValue<string>,
-      NFTSymbol: PromiseOrValue<string>,
-      NFTDescription: PromiseOrValue<string>,
-      NFTUri: PromiseOrValue<string>,
-      sharesAmount: PromiseOrValue<BigNumberish>,
-      sharesPriceMatic: PromiseOrValue<BigNumberish>,
-      sharesPriceWETH: PromiseOrValue<BigNumberish>,
-      sharesPriceUSDT: PromiseOrValue<BigNumberish>,
-      sharesPriceUSD: PromiseOrValue<BigNumberish>,
-      artistAddress: PromiseOrValue<string>,
+      erc1155address: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      tokenName: PromiseOrValue<string>,
+      tokenType: PromiseOrValue<string>,
+      priceUSDT: PromiseOrValue<BigNumberish>,
+      tokenDescription: PromiseOrValue<string>,
+      tokenImageURL: PromiseOrValue<string>,
+      tokenURI: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setRoles(
+      allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -141,19 +247,53 @@ export interface TokenFactory extends BaseContract {
     version(overrides?: CallOverrides): Promise<[string]>;
   };
 
+  ACTIVE(overrides?: CallOverrides): Promise<string>;
+
+  SUSPENDED(overrides?: CallOverrides): Promise<string>;
+
+  addNewRoleManager(
+    newRoleManagerAddress: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  addRole(
+    roleName: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  createCollection(
+    collectionUri: PromiseOrValue<string>,
+    collectionName: PromiseOrValue<string>,
+    collectionImageURL: PromiseOrValue<string>,
+    artistName: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  deleteRole(
+    roleName: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  initialize(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   metaTxName(overrides?: CallOverrides): Promise<string>;
 
   mintShares(
-    NFTName: PromiseOrValue<string>,
-    NFTSymbol: PromiseOrValue<string>,
-    NFTDescription: PromiseOrValue<string>,
-    NFTUri: PromiseOrValue<string>,
-    sharesAmount: PromiseOrValue<BigNumberish>,
-    sharesPriceMatic: PromiseOrValue<BigNumberish>,
-    sharesPriceWETH: PromiseOrValue<BigNumberish>,
-    sharesPriceUSDT: PromiseOrValue<BigNumberish>,
-    sharesPriceUSD: PromiseOrValue<BigNumberish>,
-    artistAddress: PromiseOrValue<string>,
+    erc1155address: PromiseOrValue<string>,
+    amount: PromiseOrValue<BigNumberish>,
+    tokenName: PromiseOrValue<string>,
+    tokenType: PromiseOrValue<string>,
+    priceUSDT: PromiseOrValue<BigNumberish>,
+    tokenDescription: PromiseOrValue<string>,
+    tokenImageURL: PromiseOrValue<string>,
+    tokenURI: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setRoles(
+    allAccountRoles: PromiseOrValue<BytesLike>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -165,19 +305,51 @@ export interface TokenFactory extends BaseContract {
   version(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
+    ACTIVE(overrides?: CallOverrides): Promise<string>;
+
+    SUSPENDED(overrides?: CallOverrides): Promise<string>;
+
+    addNewRoleManager(
+      newRoleManagerAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    addRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    createCollection(
+      collectionUri: PromiseOrValue<string>,
+      collectionName: PromiseOrValue<string>,
+      collectionImageURL: PromiseOrValue<string>,
+      artistName: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    deleteRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    initialize(overrides?: CallOverrides): Promise<void>;
+
     metaTxName(overrides?: CallOverrides): Promise<string>;
 
     mintShares(
-      NFTName: PromiseOrValue<string>,
-      NFTSymbol: PromiseOrValue<string>,
-      NFTDescription: PromiseOrValue<string>,
-      NFTUri: PromiseOrValue<string>,
-      sharesAmount: PromiseOrValue<BigNumberish>,
-      sharesPriceMatic: PromiseOrValue<BigNumberish>,
-      sharesPriceWETH: PromiseOrValue<BigNumberish>,
-      sharesPriceUSDT: PromiseOrValue<BigNumberish>,
-      sharesPriceUSD: PromiseOrValue<BigNumberish>,
-      artistAddress: PromiseOrValue<string>,
+      erc1155address: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      tokenName: PromiseOrValue<string>,
+      tokenType: PromiseOrValue<string>,
+      priceUSDT: PromiseOrValue<BigNumberish>,
+      tokenDescription: PromiseOrValue<string>,
+      tokenImageURL: PromiseOrValue<string>,
+      tokenURI: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setRoles(
+      allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -190,24 +362,69 @@ export interface TokenFactory extends BaseContract {
   };
 
   filters: {
-    "sharesMinted(address)"(sharesAddress?: null): sharesMintedEventFilter;
-    sharesMinted(sharesAddress?: null): sharesMintedEventFilter;
+    "collectionCreated(address)"(
+      collectionAddress?: PromiseOrValue<string> | null
+    ): collectionCreatedEventFilter;
+    collectionCreated(
+      collectionAddress?: PromiseOrValue<string> | null
+    ): collectionCreatedEventFilter;
+
+    "sharesMinted(address)"(
+      sharesAddress?: PromiseOrValue<string> | null
+    ): sharesMintedEventFilter;
+    sharesMinted(
+      sharesAddress?: PromiseOrValue<string> | null
+    ): sharesMintedEventFilter;
   };
 
   estimateGas: {
+    ACTIVE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    SUSPENDED(overrides?: CallOverrides): Promise<BigNumber>;
+
+    addNewRoleManager(
+      newRoleManagerAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    addRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    createCollection(
+      collectionUri: PromiseOrValue<string>,
+      collectionName: PromiseOrValue<string>,
+      collectionImageURL: PromiseOrValue<string>,
+      artistName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    deleteRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    initialize(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     metaTxName(overrides?: CallOverrides): Promise<BigNumber>;
 
     mintShares(
-      NFTName: PromiseOrValue<string>,
-      NFTSymbol: PromiseOrValue<string>,
-      NFTDescription: PromiseOrValue<string>,
-      NFTUri: PromiseOrValue<string>,
-      sharesAmount: PromiseOrValue<BigNumberish>,
-      sharesPriceMatic: PromiseOrValue<BigNumberish>,
-      sharesPriceWETH: PromiseOrValue<BigNumberish>,
-      sharesPriceUSDT: PromiseOrValue<BigNumberish>,
-      sharesPriceUSD: PromiseOrValue<BigNumberish>,
-      artistAddress: PromiseOrValue<string>,
+      erc1155address: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      tokenName: PromiseOrValue<string>,
+      tokenType: PromiseOrValue<string>,
+      priceUSDT: PromiseOrValue<BigNumberish>,
+      tokenDescription: PromiseOrValue<string>,
+      tokenImageURL: PromiseOrValue<string>,
+      tokenURI: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setRoles(
+      allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -220,19 +437,53 @@ export interface TokenFactory extends BaseContract {
   };
 
   populateTransaction: {
+    ACTIVE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    SUSPENDED(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    addNewRoleManager(
+      newRoleManagerAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    addRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    createCollection(
+      collectionUri: PromiseOrValue<string>,
+      collectionName: PromiseOrValue<string>,
+      collectionImageURL: PromiseOrValue<string>,
+      artistName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    deleteRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     metaTxName(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     mintShares(
-      NFTName: PromiseOrValue<string>,
-      NFTSymbol: PromiseOrValue<string>,
-      NFTDescription: PromiseOrValue<string>,
-      NFTUri: PromiseOrValue<string>,
-      sharesAmount: PromiseOrValue<BigNumberish>,
-      sharesPriceMatic: PromiseOrValue<BigNumberish>,
-      sharesPriceWETH: PromiseOrValue<BigNumberish>,
-      sharesPriceUSDT: PromiseOrValue<BigNumberish>,
-      sharesPriceUSD: PromiseOrValue<BigNumberish>,
-      artistAddress: PromiseOrValue<string>,
+      erc1155address: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      tokenName: PromiseOrValue<string>,
+      tokenType: PromiseOrValue<string>,
+      priceUSDT: PromiseOrValue<BigNumberish>,
+      tokenDescription: PromiseOrValue<string>,
+      tokenImageURL: PromiseOrValue<string>,
+      tokenURI: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setRoles(
+      allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

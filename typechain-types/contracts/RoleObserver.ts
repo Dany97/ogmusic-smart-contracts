@@ -29,7 +29,9 @@ export interface RoleObserverInterface extends utils.Interface {
     "addNewRoleManager(address)": FunctionFragment;
     "addRole(string)": FunctionFragment;
     "deleteRole(string)": FunctionFragment;
+    "metaTxName()": FunctionFragment;
     "setRoles(bytes32[])": FunctionFragment;
+    "version()": FunctionFragment;
   };
 
   getFunction(
@@ -39,7 +41,9 @@ export interface RoleObserverInterface extends utils.Interface {
       | "addNewRoleManager"
       | "addRole"
       | "deleteRole"
+      | "metaTxName"
       | "setRoles"
+      | "version"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "ACTIVE", values?: undefined): string;
@@ -57,9 +61,14 @@ export interface RoleObserverInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "metaTxName",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "setRoles",
     values: [PromiseOrValue<BytesLike>[]]
   ): string;
+  encodeFunctionData(functionFragment: "version", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "ACTIVE", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "SUSPENDED", data: BytesLike): Result;
@@ -69,7 +78,9 @@ export interface RoleObserverInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "addRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deleteRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "metaTxName", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setRoles", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
 
   events: {};
 }
@@ -120,10 +131,14 @@ export interface RoleObserver extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    metaTxName(overrides?: CallOverrides): Promise<[string]>;
+
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    version(overrides?: CallOverrides): Promise<[string]>;
   };
 
   ACTIVE(overrides?: CallOverrides): Promise<string>;
@@ -145,10 +160,14 @@ export interface RoleObserver extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  metaTxName(overrides?: CallOverrides): Promise<string>;
+
   setRoles(
     allAccountRoles: PromiseOrValue<BytesLike>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  version(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     ACTIVE(overrides?: CallOverrides): Promise<string>;
@@ -170,10 +189,14 @@ export interface RoleObserver extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    metaTxName(overrides?: CallOverrides): Promise<string>;
+
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: CallOverrides
     ): Promise<void>;
+
+    version(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
@@ -198,10 +221,14 @@ export interface RoleObserver extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    metaTxName(overrides?: CallOverrides): Promise<BigNumber>;
+
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    version(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -224,9 +251,13 @@ export interface RoleObserver extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    metaTxName(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     setRoles(
       allAccountRoles: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    version(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

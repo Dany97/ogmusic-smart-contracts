@@ -32,6 +32,25 @@ async function main() {
 
         console.log("RoleManager deployed at:", roleManager.address);
 
+
+
+        
+
+        //user manager
+        
+        const UserManager = await ethers.getContractFactory("UserManager");
+
+        const userManager = await UserManager.deploy(roleManager.address, "0x4419AF074BC3a6C7D90f242dfdC1a163Bc710091"); 
+
+        await userManager.deployed();
+
+        console.log("UserManager deployed at:", userManager.address);
+
+        await userManager.initialize();
+
+
+
+
         //token factory
 
         const TokenFactory = await ethers.getContractFactory("TokenFactory");
@@ -42,13 +61,15 @@ async function main() {
 
         console.log("TokenFactory deployed at:", tokenFactory.address);
 
+        await tokenFactory.initialize();
+
 
 
         //token shop
 
         const TokenShop = await ethers.getContractFactory("TokenShop");
 
-        const tokenShop = await TokenShop.deploy("0x4419AF074BC3a6C7D90f242dfdC1a163Bc710091"); 
+        const tokenShop = await TokenShop.deploy(roleManager.address, "0x4419AF074BC3a6C7D90f242dfdC1a163Bc710091"); 
 
         await tokenShop.deployed();
 

@@ -3,13 +3,13 @@ pragma solidity >=0.4.22 <0.9.0;
 //SPDX-License-Identifier: UNLICENSED
 
 import "./RoleManager.sol";
+import "pablock-smart-contracts/contracts/PablockMetaTxReceiver.sol";
 
-abstract contract RoleObserver {
+abstract contract RoleObserver is PablockMetaTxReceiver {
     address deployer;
     RoleManager roleManager;
     address roleManagerAddress;
 
-    //bytes32 public constant ADMIN = keccak256("ADMIN");
     bytes32 public constant ACTIVE = keccak256("ACTIVE");
     bytes32 public constant SUSPENDED = keccak256("SUSPENDED");
 
@@ -20,17 +20,22 @@ abstract contract RoleObserver {
     */
 
     modifier onlyRoleManager() {
-        require(msg.sender == roleManagerAddress);
+        require(msgSender() == roleManagerAddress);
         _;
     }
 
     modifier onlyAdmin() {
+        require(roleManager.isAdmin(msgSender()));
+        _;
+    }
+
+    modifier onlyAdminNoMetaTx() {
         require(roleManager.isAdmin(msg.sender));
         _;
     }
 
     modifier onlyOnce() {
-        require(msg.sender == deployer);
+        require(msgSender() == deployer);
         _;
     }
 

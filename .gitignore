@@ -1,6 +1,7 @@
 node_modules
 .idea
 .env
+metadata
 
 #Hardhat files
 cache

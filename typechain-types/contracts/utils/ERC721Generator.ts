@@ -29,11 +29,13 @@ import type {
 
 export interface ERC721GeneratorInterface extends utils.Interface {
   functions: {
-    "NFTArtist()": FunctionFragment;
+    "_artistName()": FunctionFragment;
+    "_nftType()": FunctionFragment;
     "_tokenDescription()": FunctionFragment;
-    "_tokenURI()": FunctionFragment;
+    "_tokenImageUrl()": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "contractURI()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "name()": FunctionFragment;
@@ -49,11 +51,13 @@ export interface ERC721GeneratorInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "NFTArtist"
+      | "_artistName"
+      | "_nftType"
       | "_tokenDescription"
-      | "_tokenURI"
+      | "_tokenImageUrl"
       | "approve"
       | "balanceOf"
+      | "contractURI"
       | "getApproved"
       | "isApprovedForAll"
       | "name"
@@ -67,12 +71,19 @@ export interface ERC721GeneratorInterface extends utils.Interface {
       | "transferFrom"
   ): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "NFTArtist", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "_artistName",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "_nftType", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "_tokenDescription",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "_tokenURI", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "_tokenImageUrl",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "approve",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
@@ -80,6 +91,10 @@ export interface ERC721GeneratorInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "balanceOf",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "contractURI",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getApproved",
@@ -133,14 +148,25 @@ export interface ERC721GeneratorInterface extends utils.Interface {
     ]
   ): string;
 
-  decodeFunctionResult(functionFragment: "NFTArtist", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "_artistName",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "_nftType", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "_tokenDescription",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "_tokenURI", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "_tokenImageUrl",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "contractURI",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
@@ -248,11 +274,13 @@ export interface ERC721Generator extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    NFTArtist(overrides?: CallOverrides): Promise<[string]>;
+    _artistName(overrides?: CallOverrides): Promise<[string]>;
+
+    _nftType(overrides?: CallOverrides): Promise<[string]>;
 
     _tokenDescription(overrides?: CallOverrides): Promise<[string]>;
 
-    _tokenURI(overrides?: CallOverrides): Promise<[string]>;
+    _tokenImageUrl(overrides?: CallOverrides): Promise<[string]>;
 
     approve(
       to: PromiseOrValue<string>,
@@ -264,6 +292,8 @@ export interface ERC721Generator extends BaseContract {
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    contractURI(overrides?: CallOverrides): Promise<[string]>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -324,11 +354,13 @@ export interface ERC721Generator extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  NFTArtist(overrides?: CallOverrides): Promise<string>;
+  _artistName(overrides?: CallOverrides): Promise<string>;
+
+  _nftType(overrides?: CallOverrides): Promise<string>;
 
   _tokenDescription(overrides?: CallOverrides): Promise<string>;
 
-  _tokenURI(overrides?: CallOverrides): Promise<string>;
+  _tokenImageUrl(overrides?: CallOverrides): Promise<string>;
 
   approve(
     to: PromiseOrValue<string>,
@@ -340,6 +372,8 @@ export interface ERC721Generator extends BaseContract {
     owner: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  contractURI(overrides?: CallOverrides): Promise<string>;
 
   getApproved(
     tokenId: PromiseOrValue<BigNumberish>,
@@ -400,11 +434,13 @@ export interface ERC721Generator extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    NFTArtist(overrides?: CallOverrides): Promise<string>;
+    _artistName(overrides?: CallOverrides): Promise<string>;
+
+    _nftType(overrides?: CallOverrides): Promise<string>;
 
     _tokenDescription(overrides?: CallOverrides): Promise<string>;
 
-    _tokenURI(overrides?: CallOverrides): Promise<string>;
+    _tokenImageUrl(overrides?: CallOverrides): Promise<string>;
 
     approve(
       to: PromiseOrValue<string>,
@@ -416,6 +452,8 @@ export interface ERC721Generator extends BaseContract {
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    contractURI(overrides?: CallOverrides): Promise<string>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -512,11 +550,13 @@ export interface ERC721Generator extends BaseContract {
   };
 
   estimateGas: {
-    NFTArtist(overrides?: CallOverrides): Promise<BigNumber>;
+    _artistName(overrides?: CallOverrides): Promise<BigNumber>;
+
+    _nftType(overrides?: CallOverrides): Promise<BigNumber>;
 
     _tokenDescription(overrides?: CallOverrides): Promise<BigNumber>;
 
-    _tokenURI(overrides?: CallOverrides): Promise<BigNumber>;
+    _tokenImageUrl(overrides?: CallOverrides): Promise<BigNumber>;
 
     approve(
       to: PromiseOrValue<string>,
@@ -528,6 +568,8 @@ export interface ERC721Generator extends BaseContract {
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -589,11 +631,13 @@ export interface ERC721Generator extends BaseContract {
   };
 
   populateTransaction: {
-    NFTArtist(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    _artistName(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    _nftType(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     _tokenDescription(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    _tokenURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    _tokenImageUrl(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     approve(
       to: PromiseOrValue<string>,
@@ -605,6 +649,8 @@ export interface ERC721Generator extends BaseContract {
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,

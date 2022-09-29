@@ -28,7 +28,7 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
     event RoleDeleted(string role);
 
     constructor(address metaTxAddress)
-        PablockMetaTxReceiver("RoleManager", "0.0.1")
+        PablockMetaTxReceiver("RoleManager", "0.1.1")
     {
         //lets the contract enable notarizzazione.cloud metatransactions
         setMetaTransaction(metaTxAddress);
@@ -40,11 +40,11 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
         _ACCOUNTROLES.push(keccak256("ADMIN"));
         _ACCOUNTROLES.push(keccak256("SYSTEM"));
 
-        _setupRole(ADMIN, msg.sender);
-        grantRole(ACTIVE, msg.sender);
-        _grantRole(ADMIN, msg.sender);
+        _setupRole(ADMIN, msgSender());
+        grantRole(ACTIVE, msgSender());
+        _grantRole(ADMIN, msgSender());
 
-        masterAdmin = msg.sender;
+        masterAdmin = msgSender();
 
         _grantRole(SYSTEM, address(this));
     }
@@ -52,6 +52,15 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
     //@dev modifier to set restrictions to methods -> only the admin can execute them
 
     modifier onlyAdmin() {
+        require(
+            hasRole(ADMIN, msgSender()),
+            "Role Manager: Function is restricted to ADMIN."
+        );
+        _;
+    }
+
+    //useful because if metxTx doesn't work it would be impossible to use pablock msgSender()
+    modifier onlyAdminNoMetaTx() {
         require(
             hasRole(ADMIN, msg.sender),
             "Role Manager: Function is restricted to ADMIN."
@@ -66,7 +75,7 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
 
     modifier onlyAdminAndSystem() {
         require(
-            hasRole(SYSTEM, msg.sender) || hasRole(ADMIN, tx.origin),
+            hasRole(SYSTEM, msgSender()) || hasRole(ADMIN, tx.origin),
             "RoleManager: Function is restricted to ADMIN and SYSTEM."
         );
         _;
@@ -171,12 +180,12 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
     function grantRole(bytes32 role, address account) public virtual override {
         if (role == ADMIN) {
             require(
-                hasRole(ADMIN, msg.sender),
+                hasRole(ADMIN, msgSender()),
                 "RoleManager: Function is restricted to Admins."
             );
         } else {
             require(
-                hasRole(ADMIN, msg.sender) || hasRole(SYSTEM, msg.sender),
+                hasRole(ADMIN, msgSender()) || hasRole(SYSTEM, msgSender()),
                 "RoleManager: Function is restricted to ADMIN or SYSTEM."
             );
             /*
@@ -204,7 +213,10 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
 
     // method to reset metatransaction in case of changes in the contract
 
-    function set_MetaTransaction(address metaTxAddress) public {
+    function set_MetaTransaction(address metaTxAddress)
+        public
+        onlyAdminNoMetaTx
+    {
         setMetaTransaction(metaTxAddress);
     }
 }

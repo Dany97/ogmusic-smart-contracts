@@ -31,17 +31,14 @@ export interface ERC20SharesGeneratorInterface extends utils.Interface {
   functions: {
     "_linkedNFT()": FunctionFragment;
     "_owner()": FunctionFragment;
-    "_priceMatic()": FunctionFragment;
-    "_priceUSD()": FunctionFragment;
     "_priceUSDT()": FunctionFragment;
-    "_priceWETH()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "mint(address,uint256,address)": FunctionFragment;
+    "mint(uint256,address)": FunctionFragment;
     "name()": FunctionFragment;
     "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -54,10 +51,7 @@ export interface ERC20SharesGeneratorInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "_linkedNFT"
       | "_owner"
-      | "_priceMatic"
-      | "_priceUSD"
       | "_priceUSDT"
-      | "_priceWETH"
       | "allowance"
       | "approve"
       | "balanceOf"
@@ -79,16 +73,7 @@ export interface ERC20SharesGeneratorInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "_owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "_priceMatic",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "_priceUSD", values?: undefined): string;
-  encodeFunctionData(
     functionFragment: "_priceUSDT",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "_priceWETH",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -114,11 +99,7 @@ export interface ERC20SharesGeneratorInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "mint",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>
-    ]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
@@ -150,13 +131,7 @@ export interface ERC20SharesGeneratorInterface extends utils.Interface {
 
   decodeFunctionResult(functionFragment: "_linkedNFT", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "_owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "_priceMatic",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "_priceUSD", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "_priceUSDT", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "_priceWETH", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -250,13 +225,7 @@ export interface ERC20SharesGenerator extends BaseContract {
 
     _owner(overrides?: CallOverrides): Promise<[string]>;
 
-    _priceMatic(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    _priceUSD(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     _priceUSDT(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    _priceWETH(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -290,7 +259,6 @@ export interface ERC20SharesGenerator extends BaseContract {
     ): Promise<ContractTransaction>;
 
     mint(
-      minter: PromiseOrValue<string>,
       shares: PromiseOrValue<BigNumberish>,
       nftAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -328,13 +296,7 @@ export interface ERC20SharesGenerator extends BaseContract {
 
   _owner(overrides?: CallOverrides): Promise<string>;
 
-  _priceMatic(overrides?: CallOverrides): Promise<BigNumber>;
-
-  _priceUSD(overrides?: CallOverrides): Promise<BigNumber>;
-
   _priceUSDT(overrides?: CallOverrides): Promise<BigNumber>;
-
-  _priceWETH(overrides?: CallOverrides): Promise<BigNumber>;
 
   allowance(
     owner: PromiseOrValue<string>,
@@ -368,7 +330,6 @@ export interface ERC20SharesGenerator extends BaseContract {
   ): Promise<ContractTransaction>;
 
   mint(
-    minter: PromiseOrValue<string>,
     shares: PromiseOrValue<BigNumberish>,
     nftAddress: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -406,13 +367,7 @@ export interface ERC20SharesGenerator extends BaseContract {
 
     _owner(overrides?: CallOverrides): Promise<string>;
 
-    _priceMatic(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _priceUSD(overrides?: CallOverrides): Promise<BigNumber>;
-
     _priceUSDT(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _priceWETH(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -446,7 +401,6 @@ export interface ERC20SharesGenerator extends BaseContract {
     ): Promise<boolean>;
 
     mint(
-      minter: PromiseOrValue<string>,
       shares: PromiseOrValue<BigNumberish>,
       nftAddress: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -509,13 +463,7 @@ export interface ERC20SharesGenerator extends BaseContract {
 
     _owner(overrides?: CallOverrides): Promise<BigNumber>;
 
-    _priceMatic(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _priceUSD(overrides?: CallOverrides): Promise<BigNumber>;
-
     _priceUSDT(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _priceWETH(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -549,7 +497,6 @@ export interface ERC20SharesGenerator extends BaseContract {
     ): Promise<BigNumber>;
 
     mint(
-      minter: PromiseOrValue<string>,
       shares: PromiseOrValue<BigNumberish>,
       nftAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -588,13 +535,7 @@ export interface ERC20SharesGenerator extends BaseContract {
 
     _owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    _priceMatic(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    _priceUSD(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     _priceUSDT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    _priceWETH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     allowance(
       owner: PromiseOrValue<string>,
@@ -628,7 +569,6 @@ export interface ERC20SharesGenerator extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     mint(
-      minter: PromiseOrValue<string>,
       shares: PromiseOrValue<BigNumberish>,
       nftAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }

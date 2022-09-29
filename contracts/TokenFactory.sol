@@ -1,17 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-import {ERC721Generator} from "./utils/ERC721Generator.sol";
-import {ERC20SharesGenerator} from "./utils/ERC20SharesGenerator.sol";
-import "./RoleManager.sol";
+import {ERC1155Contract} from "./utils/ERC1155Contract.sol";
+import {RoleManager} from "./RoleManager.sol";
+import "./RoleObserver.sol";
 import "pablock-smart-contracts/contracts/PablockMetaTxReceiver.sol";
 
-contract TokenFactory is PablockMetaTxReceiver {
-    RoleManager roleManager;
-    address roleManagerAddress;
-
+contract TokenFactory is RoleObserver {
     constructor(address initialRoleManagerAddress, address metaTxAddress)
-        PablockMetaTxReceiver("TokenFactory", "0.0.1")
+        PablockMetaTxReceiver("TokenFactory", "0.1.1")
     {
         require(initialRoleManagerAddress != address(0));
 
@@ -20,57 +17,70 @@ contract TokenFactory is PablockMetaTxReceiver {
 
         roleManagerAddress = initialRoleManagerAddress;
         roleManager = RoleManager(initialRoleManagerAddress);
+        deployer = msgSender();
     }
 
-    modifier onlyAdmin() {
-        require(roleManager.isAdmin(msg.sender));
-        _;
+    function initialize() public onlyOnce {
+        /* The roleManager is registered as an observer of RoleManager's state, effects are:
+         *  - Observed state _ACCOUNTROLES get initialised at RoyaltiesManager.
+         *  - TokenFactory becomes SYSTEM.
+         */
+        roleManager.registerAsRoleObserver(address(this));
+
+        //deployer set to address zero to trigger the onlyOnce modifier
+        deployer = address(0);
     }
 
     event sharesMinted(address indexed sharesAddress);
+    event collectionCreated(address indexed collectionAddress);
+
+    function createCollection(
+        string memory collectionUri,
+        string memory collectionName,
+        string memory collectionImageURL,
+        string memory artistName
+    ) external onlyAdmin {
+        ERC1155Contract erc1155tokenCollection = new ERC1155Contract(
+            collectionUri,
+            collectionName,
+            collectionImageURL,
+            artistName
+        );
+
+        emit collectionCreated(address(erc1155tokenCollection));
+    }
 
     function mintShares(
-        string memory NFTName,
-        string memory NFTSymbol,
-        string memory NFTDescription,
-        string memory NFTUri,
-        uint256 sharesAmount,
-        uint256 sharesPriceMatic,
-        uint256 sharesPriceWETH,
-        uint256 sharesPriceUSDT,
-        uint256 sharesPriceUSD,
-        address artistAddress
+        address erc1155address,
+        uint256 amount,
+        string memory tokenName,
+        string memory tokenType,
+        uint256 priceUSDT,
+        string memory tokenDescription,
+        string memory tokenImageURL,
+        string memory tokenURI
     ) external onlyAdmin {
-        ERC20SharesGenerator sharesGenerator = new ERC20SharesGenerator(
-            NFTName,
-            NFTSymbol,
-            sharesPriceMatic,
-            sharesPriceWETH,
-            sharesPriceUSDT,
-            sharesPriceUSD
+        ERC1155Contract erc1155token = ERC1155Contract(erc1155address);
+
+        erc1155token.mint(
+            amount,
+            tokenName,
+            tokenType,
+            priceUSDT,
+            tokenDescription,
+            tokenImageURL,
+            tokenURI
         );
 
-        ERC721Generator nftGenerator = new ERC721Generator(
-            NFTName,
-            NFTSymbol,
-            NFTDescription,
-            NFTUri,
-            address(sharesGenerator),
-            artistAddress
-        );
-
-        sharesGenerator.mint(
-            msg.sender,
-            sharesAmount * (uint256(10))**sharesGenerator.decimals(),
-            address(nftGenerator)
-        );
-
-        emit sharesMinted(address(sharesGenerator));
+        emit sharesMinted(erc1155address);
     }
 
     // method to reset metatransaction in case of changes in the contract
 
-    function set_MetaTransaction(address metaTxAddress) public {
+    function set_MetaTransaction(address metaTxAddress)
+        public
+        onlyAdminNoMetaTx
+    {
         setMetaTransaction(metaTxAddress);
     }
 }

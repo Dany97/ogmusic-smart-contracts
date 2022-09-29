@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-import {ERC20SharesGenerator} from "./utils/ERC20SharesGenerator.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {ERC1155Contract} from "./utils/ERC1155Contract.sol";
 import "./RoleObserver.sol";
 import "pablock-smart-contracts/contracts/PablockMetaTxReceiver.sol";
 
-contract RoyaltiesManager is RoleObserver, PablockMetaTxReceiver {
+contract RoyaltiesManager is RoleObserver {
     constructor(address initialRoleManagerAddress, address metaTxAddress)
-        PablockMetaTxReceiver("RoyaltiesManager", "0.0.1")
+        PablockMetaTxReceiver("RoyaltiesManager", "0.1.1")
     {
         require(initialRoleManagerAddress != address(0));
 
@@ -16,7 +17,7 @@ contract RoyaltiesManager is RoleObserver, PablockMetaTxReceiver {
 
         roleManagerAddress = initialRoleManagerAddress;
         roleManager = RoleManager(initialRoleManagerAddress);
-        deployer = msg.sender;
+        deployer = msgSender();
     }
 
     function initialize() public onlyOnce {
@@ -30,35 +31,35 @@ contract RoyaltiesManager is RoleObserver, PablockMetaTxReceiver {
         deployer = address(0);
     }
 
-    function distributeRoyalties(
-        address sharesContractAddress,
-        //uint256 totalEarnings,
-        address[] memory owners
-    ) external payable onlyAdmin {
-        ERC20SharesGenerator sharesContract = ERC20SharesGenerator(
-            sharesContractAddress
-        );
+    event royaltiesDistributed(address tokenAddress, uint256 tokenId);
 
-        uint256 maxBalance = sharesContract.totalSupply();
+    function distributeRoyaltiesMatic(
+        address sharesContractAddress,
+        address[] memory owners,
+        uint256 tokenId
+    ) external payable onlyAdmin {
+        ERC1155Contract sharesContract = ERC1155Contract(sharesContractAddress);
+
+        uint256 maxBalance = sharesContract.totalSupply(tokenId);
         uint256 balanceCounter = 0;
 
         //checks if the admin has enough balance
         require(
-            msg.sender.balance >= msg.value,
+            msgSender().balance >= msg.value,
             "You don't have enough balance"
         );
 
         //checks if you passed only tokenholders
         for (uint256 i = 0; i < owners.length; i++) {
             require(
-                sharesContract.balanceOf(owners[i]) > 0,
+                sharesContract.balanceOf(owners[i], tokenId) > 0,
                 "RoyaltiesManager: you passed one or more addresses without balance"
             );
 
             //increment a counter useful for the next check
             balanceCounter =
                 balanceCounter +
-                sharesContract.balanceOf(owners[i]);
+                sharesContract.balanceOf(owners[i], tokenId);
         }
 
         //checks if you passed only tokenholders but you forgot someone
@@ -68,16 +69,70 @@ contract RoyaltiesManager is RoleObserver, PablockMetaTxReceiver {
         );
 
         for (uint256 i = 0; i < owners.length; i++) {
-            uint256 temp = sharesContract.balanceOf(owners[i]) * msg.value;
+            uint256 temp = sharesContract.balanceOf(owners[i], tokenId) *
+                msg.value;
             uint256 amountToTransfer = temp / maxBalance;
 
             payable(address(owners[i])).transfer(amountToTransfer);
         }
+
+        emit royaltiesDistributed(sharesContractAddress, tokenId);
+    }
+
+    function distributeRoyalties(
+        uint256 valueInUSDT,
+        address sharesContractAddress,
+        address[] memory owners,
+        uint256 tokenId
+    ) external onlyAdmin {
+        ERC1155Contract sharesContract = ERC1155Contract(sharesContractAddress);
+
+        address usdtContractAddress = 0x3813e82e6f7098b9583FC0F33a962D02018B6803; //MUMBAI
+        ERC20 usdtContract = ERC20(usdtContractAddress);
+        /*
+        uint256 usdtToPay = valueInUSDT *
+            ((uint256(10))**usdtContract.decimals());
+        */
+
+        uint256 maxBalance = sharesContract.totalSupply(tokenId);
+        uint256 balanceCounter = 0;
+
+        //checks if you passed only tokenholders
+        for (uint256 i = 0; i < owners.length; i++) {
+            require(
+                sharesContract.balanceOf(owners[i], tokenId) > 0,
+                "RoyaltiesManager: you passed one or more addresses without balance"
+            );
+
+            //increment a counter useful for the next check
+            balanceCounter =
+                balanceCounter +
+                sharesContract.balanceOf(owners[i], tokenId);
+        }
+
+        //checks if you passed only tokenholders but you forgot someone
+        require(
+            balanceCounter == maxBalance,
+            "RoyaltiesManager: the array of addresses you passed is not the exact array of owners"
+        );
+
+        for (uint256 i = 0; i < owners.length; i++) {
+            uint256 temp = sharesContract.balanceOf(owners[i], tokenId) *
+                valueInUSDT;
+            uint256 amountToTransfer = temp / maxBalance;
+
+            usdtContract.transferFrom(msgSender(), owners[i], amountToTransfer);
+        }
+
+        emit royaltiesDistributed(sharesContractAddress, tokenId);
     }
 
     // method to reset metatransaction in case of changes in the contract
 
-    function set_MetaTransaction(address metaTxAddress) public {
+    function set_MetaTransaction(address metaTxAddress)
+        public
+        onlyAdminNoMetaTx
+    {
         setMetaTransaction(metaTxAddress);
     }
 }

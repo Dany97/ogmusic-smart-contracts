@@ -8,11 +8,7 @@ import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "./RoleObserver.sol";
 import "pablock-smart-contracts/contracts/PablockMetaTxReceiver.sol";
 
-contract UserManager is
-    RoleObserver,
-    AccessControlEnumerable,
-    PablockMetaTxReceiver
-{
+contract UserManager is RoleObserver, AccessControlEnumerable {
     struct UserData {
         // Updated array of strings for roles of a user e.g. ["CONSUMER", "ARTIST"].
         string[] roles;
@@ -36,7 +32,7 @@ contract UserManager is
     event UserUnbanned(address indexed user);
 
     constructor(address initialRoleManagerAddress, address metaTxAddress)
-        PablockMetaTxReceiver("UserManager", "0.0.1")
+        PablockMetaTxReceiver("UserManager", "0.1.1")
     {
         require(
             initialRoleManagerAddress != address(0),
@@ -48,7 +44,7 @@ contract UserManager is
 
         roleManagerAddress = initialRoleManagerAddress;
         roleManager = RoleManager(initialRoleManagerAddress);
-        deployer = msg.sender;
+        deployer = msgSender();
     }
 
     function initialize() public onlyOnce {
@@ -312,7 +308,10 @@ contract UserManager is
 
     // method to reset metatransaction in case of changes in the contract
 
-    function set_MetaTransaction(address metaTxAddress) public {
+    function set_MetaTransaction(address metaTxAddress)
+        public
+        onlyAdminNoMetaTx
+    {
         setMetaTransaction(metaTxAddress);
     }
 }
