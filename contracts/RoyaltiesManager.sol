@@ -17,7 +17,7 @@ contract RoyaltiesManager is RoleObserver {
 
         roleManagerAddress = initialRoleManagerAddress;
         roleManager = RoleManager(initialRoleManagerAddress);
-        deployer = msgSender();
+        deployer = msg.sender;
     }
 
     function initialize() public onlyOnce {

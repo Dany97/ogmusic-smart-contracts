@@ -204,7 +204,7 @@ export interface RoyaltiesManager extends BaseContract {
       sharesContractAddress: PromiseOrValue<string>,
       owners: PromiseOrValue<string>[],
       tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     distributeRoyaltiesMatic(
@@ -257,7 +257,7 @@ export interface RoyaltiesManager extends BaseContract {
     sharesContractAddress: PromiseOrValue<string>,
     owners: PromiseOrValue<string>[],
     tokenId: PromiseOrValue<BigNumberish>,
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   distributeRoyaltiesMatic(
@@ -373,7 +373,7 @@ export interface RoyaltiesManager extends BaseContract {
       sharesContractAddress: PromiseOrValue<string>,
       owners: PromiseOrValue<string>[],
       tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     distributeRoyaltiesMatic(
@@ -427,7 +427,7 @@ export interface RoyaltiesManager extends BaseContract {
       sharesContractAddress: PromiseOrValue<string>,
       owners: PromiseOrValue<string>[],
       tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     distributeRoyaltiesMatic(

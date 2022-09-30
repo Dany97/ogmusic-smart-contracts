@@ -24,12 +24,14 @@ contract ERC1155Contract is ERC1155Supply {
     string private _collectionURI;
     address public _owner;
     uint256 private tokenCounter;
+    address private _tokenShopAddress;
 
     constructor(
         string memory collectionUri,
         string memory collectionName,
         string memory collectionImageURL,
-        string memory artistName
+        string memory artistName,
+        address tokenShopAddress
     ) ERC1155(collectionUri) {
         name = collectionName;
         _collectionImageUrl = collectionImageURL;
@@ -37,6 +39,7 @@ contract ERC1155Contract is ERC1155Supply {
         _collectionURI = collectionUri;
         _owner = tx.origin;
         tokenCounter = 0;
+        _tokenShopAddress = tokenShopAddress;
     }
 
     function mint(
@@ -106,5 +109,18 @@ contract ERC1155Contract is ERC1155Supply {
     //function that opensea looks for when trying to retrieve collection metadata
     function contractURI() public view returns (string memory) {
         return _collectionURI;
+    }
+
+    //override isApproverForAll in order to automatically authorize TokenShop to move this address's tokens
+    function isApprovedForAll(address account, address operator)
+        public
+        view
+        virtual
+        override
+        returns (bool)
+    {
+        if (msg.sender == _tokenShopAddress) {
+            return true;
+        } else return super.isApprovedForAll(account, operator);
     }
 }

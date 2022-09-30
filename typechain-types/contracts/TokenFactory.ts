@@ -33,7 +33,7 @@ export interface TokenFactoryInterface extends utils.Interface {
     "SUSPENDED()": FunctionFragment;
     "addNewRoleManager(address)": FunctionFragment;
     "addRole(string)": FunctionFragment;
-    "createCollection(string,string,string,string)": FunctionFragment;
+    "createCollection(string,string,string,string,address)": FunctionFragment;
     "deleteRole(string)": FunctionFragment;
     "initialize()": FunctionFragment;
     "metaTxName()": FunctionFragment;
@@ -72,6 +72,7 @@ export interface TokenFactoryInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "createCollection",
     values: [
+      PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
@@ -208,6 +209,7 @@ export interface TokenFactory extends BaseContract {
       collectionName: PromiseOrValue<string>,
       collectionImageURL: PromiseOrValue<string>,
       artistName: PromiseOrValue<string>,
+      tokenShopAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -266,6 +268,7 @@ export interface TokenFactory extends BaseContract {
     collectionName: PromiseOrValue<string>,
     collectionImageURL: PromiseOrValue<string>,
     artistName: PromiseOrValue<string>,
+    tokenShopAddress: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -324,6 +327,7 @@ export interface TokenFactory extends BaseContract {
       collectionName: PromiseOrValue<string>,
       collectionImageURL: PromiseOrValue<string>,
       artistName: PromiseOrValue<string>,
+      tokenShopAddress: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -397,6 +401,7 @@ export interface TokenFactory extends BaseContract {
       collectionName: PromiseOrValue<string>,
       collectionImageURL: PromiseOrValue<string>,
       artistName: PromiseOrValue<string>,
+      tokenShopAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -456,6 +461,7 @@ export interface TokenFactory extends BaseContract {
       collectionName: PromiseOrValue<string>,
       collectionImageURL: PromiseOrValue<string>,
       artistName: PromiseOrValue<string>,
+      tokenShopAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

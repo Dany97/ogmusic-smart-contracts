@@ -40,11 +40,11 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
         _ACCOUNTROLES.push(keccak256("ADMIN"));
         _ACCOUNTROLES.push(keccak256("SYSTEM"));
 
-        _setupRole(ADMIN, msgSender());
-        grantRole(ACTIVE, msgSender());
-        _grantRole(ADMIN, msgSender());
+        _setupRole(ADMIN, msg.sender);
+        grantRole(ACTIVE, msg.sender);
+        _grantRole(ADMIN, msg.sender);
 
-        masterAdmin = msgSender();
+        masterAdmin = msg.sender;
 
         _grantRole(SYSTEM, address(this));
     }

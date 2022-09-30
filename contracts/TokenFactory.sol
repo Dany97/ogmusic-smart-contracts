@@ -17,7 +17,7 @@ contract TokenFactory is RoleObserver {
 
         roleManagerAddress = initialRoleManagerAddress;
         roleManager = RoleManager(initialRoleManagerAddress);
-        deployer = msgSender();
+        deployer = msg.sender;
     }
 
     function initialize() public onlyOnce {
@@ -38,13 +38,15 @@ contract TokenFactory is RoleObserver {
         string memory collectionUri,
         string memory collectionName,
         string memory collectionImageURL,
-        string memory artistName
+        string memory artistName,
+        address tokenShopAddress
     ) external onlyAdmin {
         ERC1155Contract erc1155tokenCollection = new ERC1155Contract(
             collectionUri,
             collectionName,
             collectionImageURL,
-            artistName
+            artistName,
+            tokenShopAddress
         );
 
         emit collectionCreated(address(erc1155tokenCollection));
