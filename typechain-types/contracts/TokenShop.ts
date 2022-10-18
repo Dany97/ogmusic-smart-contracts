@@ -9,7 +9,6 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
-  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -30,51 +29,68 @@ import type {
 
 export interface TokenShopInterface extends utils.Interface {
   functions: {
-    "buyTokensWithMatic(uint256,address,uint256)": FunctionFragment;
-    "buyTokensWithUSDT(uint256,address,uint256)": FunctionFragment;
-    "claimTokensAfterFiatPayment(uint256,address,uint256)": FunctionFragment;
+    "ACTIVE()": FunctionFragment;
+    "SUSPENDED()": FunctionFragment;
+    "addNewRoleManager(address)": FunctionFragment;
+    "addRole(string)": FunctionFragment;
+    "buyTokensWithUSDT(uint256,address,uint256,address)": FunctionFragment;
+    "deleteRole(string)": FunctionFragment;
+    "initialize()": FunctionFragment;
     "metaTxName()": FunctionFragment;
+    "setRoles(bytes32[])": FunctionFragment;
     "set_MetaTransaction(address)": FunctionFragment;
     "version()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "buyTokensWithMatic"
+      | "ACTIVE"
+      | "SUSPENDED"
+      | "addNewRoleManager"
+      | "addRole"
       | "buyTokensWithUSDT"
-      | "claimTokensAfterFiatPayment"
+      | "deleteRole"
+      | "initialize"
       | "metaTxName"
+      | "setRoles"
       | "set_MetaTransaction"
       | "version"
   ): FunctionFragment;
 
+  encodeFunctionData(functionFragment: "ACTIVE", values?: undefined): string;
+  encodeFunctionData(functionFragment: "SUSPENDED", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "buyTokensWithMatic",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    functionFragment: "addNewRoleManager",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addRole",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "buyTokensWithUSDT",
     values: [
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "claimTokensAfterFiatPayment",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    functionFragment: "deleteRole",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "metaTxName",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setRoles",
+    values: [PromiseOrValue<BytesLike>[]]
   ): string;
   encodeFunctionData(
     functionFragment: "set_MetaTransaction",
@@ -82,19 +98,21 @@ export interface TokenShopInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "version", values?: undefined): string;
 
+  decodeFunctionResult(functionFragment: "ACTIVE", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "SUSPENDED", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "buyTokensWithMatic",
+    functionFragment: "addNewRoleManager",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "addRole", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "buyTokensWithUSDT",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "claimTokensAfterFiatPayment",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "deleteRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "metaTxName", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setRoles", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "set_MetaTransaction",
     data: BytesLike
@@ -147,28 +165,43 @@ export interface TokenShop extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    buyTokensWithMatic(
-      amountToBuy: PromiseOrValue<BigNumberish>,
-      tokensAddress: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ACTIVE(overrides?: CallOverrides): Promise<[string]>;
+
+    SUSPENDED(overrides?: CallOverrides): Promise<[string]>;
+
+    addNewRoleManager(
+      newRoleManagerAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    addRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     buyTokensWithUSDT(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      buyerAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    claimTokensAfterFiatPayment(
-      amountToClaim: PromiseOrValue<BigNumberish>,
-      tokensAddress: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    deleteRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    initialize(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     metaTxName(overrides?: CallOverrides): Promise<[string]>;
+
+    setRoles(
+      allAccountRoles: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     set_MetaTransaction(
       metaTxAddress: PromiseOrValue<string>,
@@ -178,28 +211,43 @@ export interface TokenShop extends BaseContract {
     version(overrides?: CallOverrides): Promise<[string]>;
   };
 
-  buyTokensWithMatic(
-    amountToBuy: PromiseOrValue<BigNumberish>,
-    tokensAddress: PromiseOrValue<string>,
-    tokenId: PromiseOrValue<BigNumberish>,
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ACTIVE(overrides?: CallOverrides): Promise<string>;
+
+  SUSPENDED(overrides?: CallOverrides): Promise<string>;
+
+  addNewRoleManager(
+    newRoleManagerAddress: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  addRole(
+    roleName: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   buyTokensWithUSDT(
     amountToBuy: PromiseOrValue<BigNumberish>,
     tokensAddress: PromiseOrValue<string>,
     tokenId: PromiseOrValue<BigNumberish>,
+    buyerAddress: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  claimTokensAfterFiatPayment(
-    amountToClaim: PromiseOrValue<BigNumberish>,
-    tokensAddress: PromiseOrValue<string>,
-    tokenId: PromiseOrValue<BigNumberish>,
+  deleteRole(
+    roleName: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  initialize(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   metaTxName(overrides?: CallOverrides): Promise<string>;
+
+  setRoles(
+    allAccountRoles: PromiseOrValue<BytesLike>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   set_MetaTransaction(
     metaTxAddress: PromiseOrValue<string>,
@@ -209,10 +257,17 @@ export interface TokenShop extends BaseContract {
   version(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
-    buyTokensWithMatic(
-      amountToBuy: PromiseOrValue<BigNumberish>,
-      tokensAddress: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    ACTIVE(overrides?: CallOverrides): Promise<string>;
+
+    SUSPENDED(overrides?: CallOverrides): Promise<string>;
+
+    addNewRoleManager(
+      newRoleManagerAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    addRole(
+      roleName: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -220,17 +275,23 @@ export interface TokenShop extends BaseContract {
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      buyerAddress: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    claimTokensAfterFiatPayment(
-      amountToClaim: PromiseOrValue<BigNumberish>,
-      tokensAddress: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    deleteRole(
+      roleName: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    initialize(overrides?: CallOverrides): Promise<void>;
 
     metaTxName(overrides?: CallOverrides): Promise<string>;
+
+    setRoles(
+      allAccountRoles: PromiseOrValue<BytesLike>[],
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     set_MetaTransaction(
       metaTxAddress: PromiseOrValue<string>,
@@ -254,28 +315,43 @@ export interface TokenShop extends BaseContract {
   };
 
   estimateGas: {
-    buyTokensWithMatic(
-      amountToBuy: PromiseOrValue<BigNumberish>,
-      tokensAddress: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ACTIVE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    SUSPENDED(overrides?: CallOverrides): Promise<BigNumber>;
+
+    addNewRoleManager(
+      newRoleManagerAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    addRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     buyTokensWithUSDT(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      buyerAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    claimTokensAfterFiatPayment(
-      amountToClaim: PromiseOrValue<BigNumberish>,
-      tokensAddress: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    deleteRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    initialize(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     metaTxName(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setRoles(
+      allAccountRoles: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
     set_MetaTransaction(
       metaTxAddress: PromiseOrValue<string>,
@@ -286,28 +362,43 @@ export interface TokenShop extends BaseContract {
   };
 
   populateTransaction: {
-    buyTokensWithMatic(
-      amountToBuy: PromiseOrValue<BigNumberish>,
-      tokensAddress: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ACTIVE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    SUSPENDED(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    addNewRoleManager(
+      newRoleManagerAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    addRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     buyTokensWithUSDT(
       amountToBuy: PromiseOrValue<BigNumberish>,
       tokensAddress: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      buyerAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    claimTokensAfterFiatPayment(
-      amountToClaim: PromiseOrValue<BigNumberish>,
-      tokensAddress: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+    deleteRole(
+      roleName: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    initialize(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     metaTxName(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setRoles(
+      allAccountRoles: PromiseOrValue<BytesLike>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     set_MetaTransaction(
       metaTxAddress: PromiseOrValue<string>,

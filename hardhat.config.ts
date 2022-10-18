@@ -56,6 +56,13 @@ module.exports = {
       gas: 2100000,
       gasPrice: 8000000000,
       allowUnlimitedContractSize: true
+    },
+
+    polygon: {
+      url: "https://polygon-rpc.com/",
+      chainId: 137,
+      accounts: [process.env.PRIVATE_KEY],
+      timeout: 60000
     }
     
   }

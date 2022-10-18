@@ -7,11 +7,25 @@ import "./RoleObserver.sol";
 import "./UserManager.sol";
 import "pablock-smart-contracts/contracts/PablockMetaTxReceiver.sol";
 
+/*
+@dev -> Purpose of the contract: implement a role-based logic that allows to handle roles and accounts 
+status. In particular it can be used to distinguish CONSUMER, ARTIST, ADMIN and SYSTEM(smart contracts)
+roles, ACTIVE and SUSPENDED account status (in order to ban and unban users). All this logic allows,
+for the MVP version of the platform, the possibility to have functions executable only by the ADMIN of 
+the platform (through an observer pattern that allows the executive smart contracts to be updated
+with the RoleManager's status and always be aware of who is the ADMIN).
+
+This logic allows, for the future, to implement in the platform the possibility to add, remove, update,
+ban and unban users (UserManager), add and remove roles, add and remove ADMINs except the MasterAdmin 
+(RoleManager) directly on chain.
+
+Furthermore, it is built as a starting point for a potential integration of Gnosis Safe, a multisignature
+protocol useful to enhance the security of the platform from the Admin perspective.
+*/
+
 contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
     // @dev Proposal: adding roles
-    // Roles are referred to by their `bytes32` identifier. These should be exposed
-    // in the external API and be unique. The best way to achieve this is by
-    // using `public constant` hash digests.
+    // Roles are referred to by their `bytes32` identifier.
 
     bytes32[] internal _ACCOUNTROLES;
 
@@ -22,6 +36,7 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
 
     address[] private _observers;
 
+    //the master admin has a non deletable role (instead of other admins that can be deleted)
     address private masterAdmin;
 
     event RoleCreated(string role);
@@ -154,7 +169,7 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
         emit RoleCreated(name);
     }
 
-    //@dev method for the admin useful to delete an existing role
+    //@dev method for the admin useful to delete an existing role (role ADMIN cannot be deleted)
     function deleteRole(string memory name) public onlyAdmin {
         require(
             keccak256(abi.encodePacked(name)) !=
@@ -196,6 +211,7 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
         _grantRole(role, account);
     }
 
+    // @dev: method used to revoke a role to an account (impossible with MasterAdmin's ADMIN role)
     function revokeRole(bytes32 role, address account)
         public
         virtual

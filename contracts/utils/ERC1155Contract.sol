@@ -3,9 +3,10 @@ pragma solidity ^0.8.9;
 
 import {ERC1155Supply} from "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ERC1155Contract is ERC1155Supply {
-    //name of the collection that opensea sees
+contract ERC1155Contract is ERC1155Supply, Ownable {
+    //name of the collection that opensea sees if there isn't name attribute in metadata
     string public name;
 
     struct tokenData {
@@ -22,7 +23,6 @@ contract ERC1155Contract is ERC1155Supply {
     string public _collectionImageUrl;
     string public _artistName;
     string private _collectionURI;
-    address public _owner;
     uint256 private tokenCounter;
     address private _tokenShopAddress;
 
@@ -31,15 +31,16 @@ contract ERC1155Contract is ERC1155Supply {
         string memory collectionName,
         string memory collectionImageURL,
         string memory artistName,
-        address tokenShopAddress
+        address tokenShopAddress,
+        address adminAddress
     ) ERC1155(collectionUri) {
         name = collectionName;
         _collectionImageUrl = collectionImageURL;
         _artistName = artistName;
         _collectionURI = collectionUri;
-        _owner = tx.origin;
         tokenCounter = 0;
         _tokenShopAddress = tokenShopAddress;
+        _transferOwnership(adminAddress);
     }
 
     function mint(
@@ -51,7 +52,7 @@ contract ERC1155Contract is ERC1155Supply {
         string memory tokenImageURL,
         string memory tokenURI
     ) public {
-        _mint(_owner, tokenCounter, amount, "");
+        _mint(owner(), tokenCounter, amount, "");
         tokenInfo[tokenCounter]._tokenName = tokenName;
         tokenInfo[tokenCounter]._tokenType = tokenType;
         tokenInfo[tokenCounter]._priceUSDT = priceUSDT;
@@ -61,7 +62,7 @@ contract ERC1155Contract is ERC1155Supply {
         tokenCounter++;
     }
 
-    //modify collection uri
+    //modifies collection uri
     function _setURI(string memory newuri) internal virtual override {
         _collectionURI = newuri;
     }
@@ -112,6 +113,7 @@ contract ERC1155Contract is ERC1155Supply {
     }
 
     //override isApproverForAll in order to automatically authorize TokenShop to move this address's tokens
+    // it also allows OpenSea to move tokens for polygon mainnet
     function isApprovedForAll(address account, address operator)
         public
         view
@@ -119,7 +121,11 @@ contract ERC1155Contract is ERC1155Supply {
         override
         returns (bool)
     {
-        if (msg.sender == _tokenShopAddress) {
+        if (operator == _tokenShopAddress) {
+            return true;
+        }
+        if (operator == 0x207Fa8Df3a17D96Ca7EA4f2893fcdCb78a304101) {
+            //opensea polygon proxy address for erc1155
             return true;
         } else return super.isApprovedForAll(account, operator);
     }

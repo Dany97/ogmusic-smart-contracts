@@ -9,7 +9,6 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
-  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -36,7 +35,6 @@ export interface RoyaltiesManagerInterface extends utils.Interface {
     "addRole(string)": FunctionFragment;
     "deleteRole(string)": FunctionFragment;
     "distributeRoyalties(uint256,address,address[],uint256)": FunctionFragment;
-    "distributeRoyaltiesMatic(address,address[],uint256)": FunctionFragment;
     "initialize()": FunctionFragment;
     "metaTxName()": FunctionFragment;
     "setRoles(bytes32[])": FunctionFragment;
@@ -52,7 +50,6 @@ export interface RoyaltiesManagerInterface extends utils.Interface {
       | "addRole"
       | "deleteRole"
       | "distributeRoyalties"
-      | "distributeRoyaltiesMatic"
       | "initialize"
       | "metaTxName"
       | "setRoles"
@@ -78,14 +75,6 @@ export interface RoyaltiesManagerInterface extends utils.Interface {
     functionFragment: "distributeRoyalties",
     values: [
       PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>[],
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "distributeRoyaltiesMatic",
-    values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>[],
       PromiseOrValue<BigNumberish>
@@ -119,10 +108,6 @@ export interface RoyaltiesManagerInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "deleteRole", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "distributeRoyalties",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "distributeRoyaltiesMatic",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
@@ -207,13 +192,6 @@ export interface RoyaltiesManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    distributeRoyaltiesMatic(
-      sharesContractAddress: PromiseOrValue<string>,
-      owners: PromiseOrValue<string>[],
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     initialize(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -260,13 +238,6 @@ export interface RoyaltiesManager extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  distributeRoyaltiesMatic(
-    sharesContractAddress: PromiseOrValue<string>,
-    owners: PromiseOrValue<string>[],
-    tokenId: PromiseOrValue<BigNumberish>,
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   initialize(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -307,13 +278,6 @@ export interface RoyaltiesManager extends BaseContract {
 
     distributeRoyalties(
       valueInUSDT: PromiseOrValue<BigNumberish>,
-      sharesContractAddress: PromiseOrValue<string>,
-      owners: PromiseOrValue<string>[],
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    distributeRoyaltiesMatic(
       sharesContractAddress: PromiseOrValue<string>,
       owners: PromiseOrValue<string>[],
       tokenId: PromiseOrValue<BigNumberish>,
@@ -376,13 +340,6 @@ export interface RoyaltiesManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    distributeRoyaltiesMatic(
-      sharesContractAddress: PromiseOrValue<string>,
-      owners: PromiseOrValue<string>[],
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     initialize(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -428,13 +385,6 @@ export interface RoyaltiesManager extends BaseContract {
       owners: PromiseOrValue<string>[],
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    distributeRoyaltiesMatic(
-      sharesContractAddress: PromiseOrValue<string>,
-      owners: PromiseOrValue<string>[],
-      tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     initialize(

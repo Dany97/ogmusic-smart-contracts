@@ -5,11 +5,9 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {ERC1155Contract} from "./utils/ERC1155Contract.sol";
 import "pablock-smart-contracts/contracts/PablockMetaTxReceiver.sol";
 import {RoleManager} from "./RoleManager.sol";
+import "./RoleObserver.sol";
 
-contract TokenShop is PablockMetaTxReceiver {
-    RoleManager roleManager;
-    address roleManagerAddress;
-
+contract TokenShop is RoleObserver {
     constructor(address initialRoleManagerAddress, address metaTxAddress)
         PablockMetaTxReceiver("TokenShop", "0.1.1")
     {
@@ -20,161 +18,63 @@ contract TokenShop is PablockMetaTxReceiver {
 
         roleManagerAddress = initialRoleManagerAddress;
         roleManager = RoleManager(initialRoleManagerAddress);
+        deployer = msg.sender;
     }
 
-    modifier onlyAdminNoMetaTx() {
-        require(roleManager.isAdmin(msg.sender));
-        _;
+    function initialize() public onlyOnce {
+        /* The roleManager is registered as an observer of RoleManager's state, effects are:
+         *  - Observed state _ACCOUNTROLES get initialised at TokenShop.
+         *  - TokenShop becomes SYSTEM.
+         */
+        roleManager.registerAsRoleObserver(address(this));
+
+        //deployer set to address zero to trigger the onlyOnce modifier
+        deployer = address(0);
     }
 
     event tokensBought(address tokenAddress, uint256 tokenId, address buyer);
 
-    function buyTokensWithMatic(
-        uint256 amountToBuy,
-        address tokensAddress,
-        uint256 tokenId
-    ) external payable {
-        ERC1155Contract tokensContract = ERC1155Contract(tokensAddress);
-        uint256 price = tokensContract._priceUSDT(tokenId);
-        //checks if the amount of matic sent equals the total price of the tokens
-        require(msg.value == amountToBuy * price, "incorrect price");
-
-        //checks if there are unsold tokens
-        require(
-            tokensContract.balanceOf(tokensContract._owner(), tokenId) >=
-                amountToBuy,
-            "all the tokens have been sold"
-        );
-
-        //token transfer
-
-        tokensContract.safeTransferFrom(
-            tokensContract._owner(),
-            msgSender(),
-            tokenId,
-            amountToBuy,
-            ""
-        );
-
-        //finally, the contract sends the amount of Balance contained in msg.value to the
-        //admin (owner of tokens contract)
-        payable(address(tokensContract._owner())).transfer(msg.value);
-
-        emit tokensBought(tokensAddress, tokenId, msgSender());
-    }
-
     function buyTokensWithUSDT(
         uint256 amountToBuy,
         address tokensAddress,
-        uint256 tokenId
-    ) external {
-        address usdtContractAddress = 0x3813e82e6f7098b9583FC0F33a962D02018B6803; //MUMBAI
+        uint256 tokenId,
+        address buyerAddress
+    ) external onlyAdmin {
+        //mumbai usdt address 0x3813e82e6f7098b9583FC0F33a962D02018B6803
+        //polygon mainnet usdt address 0xc2132D05D31c914a87C6611C10748AEb04B58e8F
+
+        address usdtContractAddress = 0xc2132D05D31c914a87C6611C10748AEb04B58e8F;
 
         ERC1155Contract tokensContract = ERC1155Contract(tokensAddress);
+
         uint256 price = tokensContract._priceUSDT(tokenId);
 
         ERC20 usdtContract = ERC20(usdtContractAddress);
 
-        uint256 usdtToPay = amountToBuy *
-            price *
-            ((uint256(10))**usdtContract.decimals());
+        uint256 usdtToPay = amountToBuy * price;
 
         //checks if there are unsold tokens
         require(
-            tokensContract.balanceOf(tokensContract._owner(), tokenId) >=
+            tokensContract.balanceOf(tokensContract.owner(), tokenId) >=
                 amountToBuy,
-            "all the tokens have been sold"
+            "token amount not available"
         );
 
         //the contract transfers USDT tokens from msgSender() to the admin
 
-        usdtContract.transferFrom(
-            msgSender(),
-            tokensContract._owner(),
-            usdtToPay
-        );
+        usdtContract.transferFrom(buyerAddress, msgSender(), usdtToPay);
 
-        /*
-        tokens are transferred from owner to buyer (msgSender())
-        */
+        // tokens are transferred from owner to buyer (msgSender())
 
         tokensContract.safeTransferFrom(
-            tokensContract._owner(),
             msgSender(),
+            buyerAddress,
             tokenId,
             amountToBuy,
             ""
         );
 
-        emit tokensBought(tokensAddress, tokenId, msgSender());
-    }
-
-    /*
-    function buyTokensWithWETH(uint256 amountToBuy, address tokensAddress)
-        external
-    {
-        address wethContractAddress = 0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa; //MUMBAI
-
-        ERC20SharesGenerator tokensContract = ERC20SharesGenerator(
-            tokensAddress
-        );
-
-        ERC20 wethContract = ERC20(wethContractAddress);
-
-        uint256 wethToPay = amountToBuy *
-            tokensContract._priceWETH() *
-            ((uint256(10))**wethContract.decimals());
-
-        //conversion wei to token unit
-        uint256 scaledAmount = amountToBuy *
-            ((uint256(10))**tokensContract.decimals());
-
-        //checks if there are unsold tokens
-        require(
-            tokensContract.balanceOf(tokensContract._owner()) >= scaledAmount,
-            "all the tokens have been sold"
-        );
-
-        //the contract transfers WETH tokens from msgSender() to the admin
-
-        wethContract.transferFrom(
-            msgSender(),
-            tokensContract._owner(),
-            wethToPay
-        );
-
-        
-        //tokens are transferred from owner to buyer (msgSender())
-        
-
-        tokensContract.transferFrom(
-            tokensContract._owner(),
-            msgSender(),
-            scaledAmount
-        );
-    }
-    */
-
-    function claimTokensAfterFiatPayment(
-        uint256 amountToClaim,
-        address tokensAddress,
-        uint256 tokenId
-    ) external {
-        ERC1155Contract tokensContract = ERC1155Contract(tokensAddress);
-
-        /*
-        token transfer
-        */
-
-        tokensContract.safeTransferFrom(
-            tokensContract._owner(),
-            msgSender(),
-            tokenId,
-            amountToClaim,
-            ""
-        );
-
-        emit tokensBought(tokensAddress, tokenId, msgSender());
+        emit tokensBought(tokensAddress, tokenId, buyerAddress);
     }
 
     // method to reset metatransaction in case of changes in the contract

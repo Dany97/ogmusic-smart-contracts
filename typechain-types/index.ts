@@ -62,6 +62,8 @@ export type { TokenShop } from "./contracts/TokenShop";
 export { TokenShop__factory } from "./factories/contracts/TokenShop__factory";
 export type { UserManager } from "./contracts/UserManager";
 export { UserManager__factory } from "./factories/contracts/UserManager__factory";
+export type { CustomERC20 } from "./contracts/utils/CustomERC20";
+export { CustomERC20__factory } from "./factories/contracts/utils/CustomERC20__factory";
 export type { ERC1155Contract } from "./contracts/utils/ERC1155Contract";
 export { ERC1155Contract__factory } from "./factories/contracts/utils/ERC1155Contract__factory";
 export type { IEIP712MetaTransaction } from "./pablock-smart-contracts/contracts/interfaces/IEIP712MetaTransaction";

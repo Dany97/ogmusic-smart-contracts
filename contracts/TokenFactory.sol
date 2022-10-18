@@ -34,6 +34,8 @@ contract TokenFactory is RoleObserver {
     event sharesMinted(address indexed sharesAddress);
     event collectionCreated(address indexed collectionAddress);
 
+    //creates a ERC1155 collection, that represents the collection of a single artist (singles + albums)
+
     function createCollection(
         string memory collectionUri,
         string memory collectionName,
@@ -46,11 +48,14 @@ contract TokenFactory is RoleObserver {
             collectionName,
             collectionImageURL,
             artistName,
-            tokenShopAddress
+            tokenShopAddress,
+            msgSender()
         );
 
         emit collectionCreated(address(erc1155tokenCollection));
     }
+
+    //adds a single or an album to an already existing artist ERC1155 collection
 
     function mintShares(
         address erc1155address,

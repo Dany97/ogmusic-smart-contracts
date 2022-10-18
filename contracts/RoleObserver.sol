@@ -15,9 +15,7 @@ abstract contract RoleObserver is PablockMetaTxReceiver {
 
     bytes32[] internal _ACCOUNTROLES;
 
-    /*
-        Functions to be called for observed state (_ACCOUNTROLES[] at the RoleManager) update.
-    */
+    //modifiers
 
     modifier onlyRoleManager() {
         require(msgSender() == roleManagerAddress);
@@ -29,6 +27,8 @@ abstract contract RoleObserver is PablockMetaTxReceiver {
         _;
     }
 
+    //useful for setMetaTransaction (if bcode changes metaTx address msgSender() may fail)
+
     modifier onlyAdminNoMetaTx() {
         require(roleManager.isAdmin(msg.sender));
         _;
@@ -39,6 +39,11 @@ abstract contract RoleObserver is PablockMetaTxReceiver {
         _;
     }
 
+    /*
+        Functions to be called for observed state (_ACCOUNTROLES[] at the RoleManager) update.
+    */
+
+    //useful if the address of the RoleManager changes
     function addNewRoleManager(address newRoleManagerAddress)
         external
         onlyAdmin

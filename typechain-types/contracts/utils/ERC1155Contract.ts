@@ -31,7 +31,6 @@ export interface ERC1155ContractInterface extends utils.Interface {
   functions: {
     "_artistName()": FunctionFragment;
     "_collectionImageUrl()": FunctionFragment;
-    "_owner()": FunctionFragment;
     "_priceUSDT(uint256)": FunctionFragment;
     "_tokenDescription(uint256)": FunctionFragment;
     "_tokenImageLink(uint256)": FunctionFragment;
@@ -44,12 +43,15 @@ export interface ERC1155ContractInterface extends utils.Interface {
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(uint256,string,string,uint256,string,string,string)": FunctionFragment;
     "name()": FunctionFragment;
+    "owner()": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
     "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "tokenInfo(uint256)": FunctionFragment;
     "totalSupply(uint256)": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
     "uri(uint256)": FunctionFragment;
   };
 
@@ -57,7 +59,6 @@ export interface ERC1155ContractInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "_artistName"
       | "_collectionImageUrl"
-      | "_owner"
       | "_priceUSDT"
       | "_tokenDescription"
       | "_tokenImageLink"
@@ -70,12 +71,15 @@ export interface ERC1155ContractInterface extends utils.Interface {
       | "isApprovedForAll"
       | "mint"
       | "name"
+      | "owner"
+      | "renounceOwnership"
       | "safeBatchTransferFrom"
       | "safeTransferFrom"
       | "setApprovalForAll"
       | "supportsInterface"
       | "tokenInfo"
       | "totalSupply"
+      | "transferOwnership"
       | "uri"
   ): FunctionFragment;
 
@@ -87,7 +91,6 @@ export interface ERC1155ContractInterface extends utils.Interface {
     functionFragment: "_collectionImageUrl",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "_owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "_priceUSDT",
     values: [PromiseOrValue<BigNumberish>]
@@ -141,6 +144,11 @@ export interface ERC1155ContractInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "safeBatchTransferFrom",
     values: [
@@ -178,6 +186,10 @@ export interface ERC1155ContractInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "uri",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -190,7 +202,6 @@ export interface ERC1155ContractInterface extends utils.Interface {
     functionFragment: "_collectionImageUrl",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "_owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "_priceUSDT", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "_tokenDescription",
@@ -218,6 +229,11 @@ export interface ERC1155ContractInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "safeBatchTransferFrom",
     data: BytesLike
@@ -239,16 +255,22 @@ export interface ERC1155ContractInterface extends utils.Interface {
     functionFragment: "totalSupply",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "uri", data: BytesLike): Result;
 
   events: {
     "ApprovalForAll(address,address,bool)": EventFragment;
+    "OwnershipTransferred(address,address)": EventFragment;
     "TransferBatch(address,address,address,uint256[],uint256[])": EventFragment;
     "TransferSingle(address,address,address,uint256,uint256)": EventFragment;
     "URI(string,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferBatch"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferSingle"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "URI"): EventFragment;
@@ -265,6 +287,18 @@ export type ApprovalForAllEvent = TypedEvent<
 >;
 
 export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
+
+export interface OwnershipTransferredEventObject {
+  previousOwner: string;
+  newOwner: string;
+}
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string],
+  OwnershipTransferredEventObject
+>;
+
+export type OwnershipTransferredEventFilter =
+  TypedEventFilter<OwnershipTransferredEvent>;
 
 export interface TransferBatchEventObject {
   operator: string;
@@ -333,8 +367,6 @@ export interface ERC1155Contract extends BaseContract {
 
     _collectionImageUrl(overrides?: CallOverrides): Promise<[string]>;
 
-    _owner(overrides?: CallOverrides): Promise<[string]>;
-
     _priceUSDT(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -398,6 +430,12 @@ export interface ERC1155Contract extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
+    owner(overrides?: CallOverrides): Promise<[string]>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     safeBatchTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -446,6 +484,11 @@ export interface ERC1155Contract extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     uri(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -455,8 +498,6 @@ export interface ERC1155Contract extends BaseContract {
   _artistName(overrides?: CallOverrides): Promise<string>;
 
   _collectionImageUrl(overrides?: CallOverrides): Promise<string>;
-
-  _owner(overrides?: CallOverrides): Promise<string>;
 
   _priceUSDT(
     tokenId: PromiseOrValue<BigNumberish>,
@@ -521,6 +562,12 @@ export interface ERC1155Contract extends BaseContract {
 
   name(overrides?: CallOverrides): Promise<string>;
 
+  owner(overrides?: CallOverrides): Promise<string>;
+
+  renounceOwnership(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   safeBatchTransferFrom(
     from: PromiseOrValue<string>,
     to: PromiseOrValue<string>,
@@ -569,6 +616,11 @@ export interface ERC1155Contract extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  transferOwnership(
+    newOwner: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   uri(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -578,8 +630,6 @@ export interface ERC1155Contract extends BaseContract {
     _artistName(overrides?: CallOverrides): Promise<string>;
 
     _collectionImageUrl(overrides?: CallOverrides): Promise<string>;
-
-    _owner(overrides?: CallOverrides): Promise<string>;
 
     _priceUSDT(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -644,6 +694,10 @@ export interface ERC1155Contract extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<string>;
 
+    owner(overrides?: CallOverrides): Promise<string>;
+
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
     safeBatchTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -692,6 +746,11 @@ export interface ERC1155Contract extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     uri(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -709,6 +768,15 @@ export interface ERC1155Contract extends BaseContract {
       operator?: PromiseOrValue<string> | null,
       approved?: null
     ): ApprovalForAllEventFilter;
+
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: PromiseOrValue<string> | null,
+      newOwner?: PromiseOrValue<string> | null
+    ): OwnershipTransferredEventFilter;
+    OwnershipTransferred(
+      previousOwner?: PromiseOrValue<string> | null,
+      newOwner?: PromiseOrValue<string> | null
+    ): OwnershipTransferredEventFilter;
 
     "TransferBatch(address,address,address,uint256[],uint256[])"(
       operator?: PromiseOrValue<string> | null,
@@ -751,8 +819,6 @@ export interface ERC1155Contract extends BaseContract {
     _artistName(overrides?: CallOverrides): Promise<BigNumber>;
 
     _collectionImageUrl(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     _priceUSDT(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -817,6 +883,12 @@ export interface ERC1155Contract extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     safeBatchTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -856,6 +928,11 @@ export interface ERC1155Contract extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     uri(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -868,8 +945,6 @@ export interface ERC1155Contract extends BaseContract {
     _collectionImageUrl(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    _owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     _priceUSDT(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -934,6 +1009,12 @@ export interface ERC1155Contract extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     safeBatchTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -971,6 +1052,11 @@ export interface ERC1155Contract extends BaseContract {
     totalSupply(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     uri(
