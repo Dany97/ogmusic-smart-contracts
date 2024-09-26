@@ -4,11 +4,12 @@ require("@nomicfoundation/hardhat-toolbox");
 import "@nomicfoundation/hardhat-chai-matchers";
 import "hardhat-contract-sizer";
 
+import * as dotenv from 'dotenv';
 
 
 
 
-
+dotenv.config();
  
 // The next line is part of the sample project, you don't need it in your
 // project. It imports a Hardhat task definition, that can be used for
@@ -41,7 +42,7 @@ module.exports = {
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com",
       chainId: 80001,
-      accounts: [process.env.PRIVATE_KEY],
+      accounts: [process.env.OG_PRIVATE_KEY],
       timeout: 60000,
       gas: 2100000,
       gasPrice: 8000000000,
@@ -59,9 +60,9 @@ module.exports = {
     },
 
     polygon: {
-      url: "https://polygon-rpc.com/",
+      url: "https://polygon-mainnet.g.alchemy.com/v2/bGl9RcQMz08-oXKzlBCxyFwlrgidtKdE",
       chainId: 137,
-      accounts: [process.env.PRIVATE_KEY],
+      accounts: [process.env.OG_PRIVATE_KEY],
       timeout: 60000
     }
     

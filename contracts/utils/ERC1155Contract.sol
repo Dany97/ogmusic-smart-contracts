@@ -67,6 +67,10 @@ contract ERC1155Contract is ERC1155Supply, Ownable {
         _collectionURI = newuri;
     }
 
+    function setURI(string memory newuri) public {
+        _setURI(newuri);
+    }
+
     function uri(uint256 tokenId)
         public
         view

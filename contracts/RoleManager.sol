@@ -227,7 +227,7 @@ contract RoleManager is AccessControlEnumerable, PablockMetaTxReceiver {
         _revokeRole(role, account);
     }
 
-    // method to reset metatransaction in case of changes in the contract
+    // method to reset metatransaction address in case of changes in the contract
 
     function set_MetaTransaction(address metaTxAddress)
         public
